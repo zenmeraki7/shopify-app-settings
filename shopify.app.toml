@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b14298e0daadbc2084bd859745a15091"
-application_url = "https://democratic-remainder-approaches-outstanding.trycloudflare.com"
+application_url = "https://grade-austin-medicines-televisions.trycloudflare.com"
 embedded = true
 name = "app-settings"
 handle = "app-settings-1"
@@ -19,9 +19,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://democratic-remainder-approaches-outstanding.trycloudflare.com/auth/callback",
-  "https://democratic-remainder-approaches-outstanding.trycloudflare.com/auth/shopify/callback",
-  "https://democratic-remainder-approaches-outstanding.trycloudflare.com/api/auth/callback"
+  "https://grade-austin-medicines-televisions.trycloudflare.com/auth/callback",
+  "https://grade-austin-medicines-televisions.trycloudflare.com/auth/shopify/callback",
+  "https://grade-austin-medicines-televisions.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
