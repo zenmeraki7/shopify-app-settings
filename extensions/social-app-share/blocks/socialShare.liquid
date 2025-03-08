@@ -1,0 +1,131 @@
+{% comment %}
+  Social Share Buttons Section for Shopify
+  Allows customers to share products on various social platforms
+{% endcomment %}
+
+{% schema %}
+{
+  "name": "Social Share Section",
+  "target": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Share this product"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_facebook",
+      "label": "Show Facebook",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_twitter",
+      "label": "Show Twitter",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_instagram",
+      "label": "Show Instagram",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_whatsapp",
+      "label": "Show WhatsApp",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_email",
+      "label": "Show Email",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .social-share-container {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .social-share-heading {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  .social-share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .social-btn {
+    width: 50px;
+    height: 50px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #f0f0f0; 
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .social-btn img {
+    width: 28px; 
+    height: 28px;
+    object-fit: contain;
+  }
+  .social-btn:hover {
+    transform: scale(1.1);
+  }
+</style>
+
+<div class="social-share-container">
+  <p class="social-share-heading">{{ block.settings.heading }}</p>
+
+  {%- liquid
+    assign product_url = shop.url | append: product.url
+    assign product_title = product.title | url_encode
+    assign image_url = product.featured_image | img_url: 'large' | url_encode
+  -%}
+  
+  <div class="social-share-buttons">
+    {% if block.settings.show_facebook %}
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{ product_url }}" target="_blank" class="social-btn fb">
+        <img src="{{ 'facebook.png' | asset_url }}" alt="Facebook">
+      </a>
+    {% endif %}
+
+    {% if block.settings.show_twitter %}
+      <a href="https://twitter.com/intent/tweet?text={{ product_title }}&url={{ product_url }}&image={{ image_url }}" target="_blank" class="social-btn twitter">
+        <img src="{{ 'x.png' | asset_url }}" alt="Twitter">
+      </a>
+    {% endif %}
+
+    {% if block.settings.show_instagram %}
+      <a href="https://www.instagram.com/" target="_blank" class="social-btn insta">
+        <img src="{{ 'instagram.jpeg' | asset_url }}" alt="Instagram">
+      </a>
+    {% endif %}
+
+    {% if block.settings.show_whatsapp %}
+      <a href="https://api.whatsapp.com/send?text={{ product_title }}%20{{ product_url }}" target="_blank" class="social-btn whatsapp">
+        <img src="{{ 'whatsapp.png' | asset_url }}" alt="WhatsApp">
+      </a>
+    {% endif %}
+
+    {% if block.settings.show_email %}
+      {% assign email_body = "Check out this product: " | append: product_title | append: " " | append: product_url %}
+      <a href="mailto:?subject={{ product_title }}&body={{ email_body }}" class="social-btn email">
+        <img src="{{ 'email.png' | asset_url }}" alt="Email">
+      </a>
+    {% endif %}
+  </div>
+</div>

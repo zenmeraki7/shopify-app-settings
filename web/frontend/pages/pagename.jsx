@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Page,
   Card,
@@ -11,22 +11,11 @@ import {
   Stack,
   Icon,
   Banner,
-  Link,
-} from "@shopify/polaris";
-import { PlusMinor, ExternalMinor } from "@shopify/polaris-icons";
+  Link
+} from '@shopify/polaris';
+import { PlusMinor, ExternalMinor } from '@shopify/polaris-icons';
 import { useTranslation } from "react-i18next";
-import {
-  FacebookShareButton,
-  TwitterShareButton,
-  WhatsappShareButton,
-  PinterestShareButton,
-  EmailShareButton,
-  FacebookIcon,
-  TwitterIcon,
-  WhatsappIcon,
-  PinterestIcon,
-  EmailIcon,
-} from "react-share";
+
 export default function PageName() {
   const { t } = useTranslation();
   const [socialMedia, setSocialMedia] = useState({
@@ -34,12 +23,12 @@ export default function PageName() {
     facebook: true,
     instagram: true,
     twitter: true,
-    pinterest: true,
+    pinterest: true
   });
 
   // State for button style and position
-  const [buttonStyle, setButtonStyle] = useState("circular");
-  const [buttonPosition, setButtonPosition] = useState("below_cart");
+  const [buttonStyle, setButtonStyle] = useState('circular');
+  const [buttonPosition, setButtonPosition] = useState('below_cart');
 
   // State for activation status
   const [isActivated, setIsActivated] = useState(false);
@@ -48,7 +37,7 @@ export default function PageName() {
   const handleToggle = (platform) => {
     setSocialMedia({
       ...socialMedia,
-      [platform]: !socialMedia[platform],
+      [platform]: !socialMedia[platform]
     });
   };
 
@@ -56,34 +45,33 @@ export default function PageName() {
   const handleActivation = () => {
     setIsActivated(!isActivated);
   };
-  const shareUrl = "https://yourwebsite.com"; // Change to your actual URL
-  const shareTitle = "Check this out!";
+
   // Custom toggle style to match the image
   const ToggleSwitch = ({ platform, isActive }) => {
     return (
       <div
         onClick={() => handleToggle(platform)}
         style={{
-          width: "46px",
-          height: "24px",
-          backgroundColor: isActive ? "#5c6ac4" : "#e4e9f2",
-          borderRadius: "12px",
-          position: "relative",
-          cursor: "pointer",
-          transition: "background-color 0.3s ease",
+          width: '46px',
+          height: '24px',
+          backgroundColor: isActive ? '#5c6ac4' : '#e4e9f2',
+          borderRadius: '12px',
+          position: 'relative',
+          cursor: 'pointer',
+          transition: 'background-color 0.3s ease'
         }}
       >
         <div
           style={{
-            position: "absolute",
-            width: "20px",
-            height: "20px",
-            backgroundColor: "white",
-            borderRadius: "50%",
-            top: "2px",
-            left: isActive ? "24px" : "2px",
-            transition: "left 0.3s ease",
-            boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.1)",
+            position: 'absolute',
+            width: '20px',
+            height: '20px',
+            backgroundColor: 'white',
+            borderRadius: '50%',
+            top: '2px',
+            left: isActive ? '24px' : '2px',
+            transition: 'left 0.3s ease',
+            boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.1)'
           }}
         />
       </div>
@@ -93,28 +81,26 @@ export default function PageName() {
   // Platform Icon component for visual enhancement
   const PlatformIcon = ({ platform }) => {
     const iconColors = {
-      whatsapp: "#25D366",
-      facebook: "#1877F2",
-      instagram: "#E4405F",
-      twitter: "#1DA1F2",
-      pinterest: "#BD081C",
+      whatsapp: '#25D366',
+      facebook: '#1877F2',
+      instagram: '#E4405F',
+      twitter: '#1DA1F2',
+      pinterest: '#BD081C'
     };
 
     return (
-      <div
-        style={{
-          width: "28px",
-          height: "28px",
-          backgroundColor: iconColors[platform],
-          borderRadius: "50%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "white",
-          fontWeight: "bold",
-          fontSize: "14px",
-        }}
-      >
+      <div style={{
+        width: '28px',
+        height: '28px',
+        backgroundColor: iconColors[platform],
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: '14px'
+      }}>
         {platform.charAt(0).toUpperCase()}
       </div>
     );
@@ -123,31 +109,27 @@ export default function PageName() {
   // MetaMatrix Logo component
   const MetaMatrixLogo = () => {
     return (
-      <div
-        style={{
-          fontSize: "24px",
-          fontWeight: "bold",
-          color: "#5c6ac4",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-        }}
-      >
-        <div
-          style={{
-            width: "40px",
-            height: "40px",
-            backgroundColor: "#5c6ac4",
-            borderRadius: "8px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "white",
-            fontWeight: "bold",
-            fontSize: "24px",
-            marginRight: "8px",
-          }}
-        >
+      <div style={{
+        fontSize: '24px',
+        fontWeight: 'bold',
+        color: '#5c6ac4',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+      }}>
+        <div style={{
+          width: '40px',
+          height: '40px',
+          backgroundColor: '#5c6ac4',
+          borderRadius: '8px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: '24px',
+          marginRight: '8px'
+        }}>
           M
         </div>
         MetaMatrix
@@ -162,188 +144,93 @@ export default function PageName() {
           <Card sectioned>
             <Stack distribution="equalSpacing">
               <Heading>General Settings</Heading>
-              <Button
-                icon={<Icon source={PlusMinor} />}
-                accessibilityLabel="Add new setting"
-              />
+              <Button icon={<Icon source={PlusMinor} />} accessibilityLabel="Add new setting" />
             </Stack>
           </Card>
 
-          <div style={{ marginTop: "16px" }}>
+          <div style={{ marginTop: '16px' }}>
             <Card sectioned>
               <TextContainer>
                 <Heading>Share Platforms</Heading>
               </TextContainer>
 
               {/* Social Media Platform List */}
-              <div style={{ marginTop: "16px" }}>
+              <div style={{ marginTop: '16px' }}>
                 {/* WhatsApp Toggle */}
-                <div
-                  style={{
-                    padding: "12px 0",
-                    borderBottom: "1px solid #f4f6f8",
-                  }}
-                >
+                <div style={{ padding: '12px 0', borderBottom: '1px solid #f4f6f8' }}>
                   <Stack distribution="equalSpacing" alignment="center">
                     <Stack alignment="center" spacing="tight">
                       <PlatformIcon platform="whatsapp" />
                       <TextContainer>
-                        <span style={{ color: "#212b36", fontSize: "14px" }}>
-                          WhatsApp
-                        </span>
+                        <span style={{ color: '#212b36', fontSize: '14px' }}>WhatsApp</span>
                       </TextContainer>
                     </Stack>
-                    <ToggleSwitch
-                      platform="whatsapp"
-                      isActive={socialMedia.whatsapp}
-                    />
+                    <ToggleSwitch platform="whatsapp" isActive={socialMedia.whatsapp} />
                   </Stack>
                 </div>
 
                 {/* Facebook Toggle */}
-                <div
-                  style={{
-                    padding: "12px 0",
-                    borderBottom: "1px solid #f4f6f8",
-                  }}
-                >
+                <div style={{ padding: '12px 0', borderBottom: '1px solid #f4f6f8' }}>
                   <Stack distribution="equalSpacing" alignment="center">
                     <Stack alignment="center" spacing="tight">
                       <PlatformIcon platform="facebook" />
                       <TextContainer>
-                        <span style={{ color: "#212b36", fontSize: "14px" }}>
-                          Facebook
-                        </span>
+                        <span style={{ color: '#212b36', fontSize: '14px' }}>Facebook</span>
                       </TextContainer>
                     </Stack>
-                    <ToggleSwitch
-                      platform="facebook"
-                      isActive={socialMedia.facebook}
-                    />
+                    <ToggleSwitch platform="facebook" isActive={socialMedia.facebook} />
                   </Stack>
                 </div>
 
                 {/* Instagram Toggle */}
-                <div
-                  style={{
-                    padding: "12px 0",
-                    borderBottom: "1px solid #f4f6f8",
-                  }}
-                >
+                <div style={{ padding: '12px 0', borderBottom: '1px solid #f4f6f8' }}>
                   <Stack distribution="equalSpacing" alignment="center">
                     <Stack alignment="center" spacing="tight">
                       <PlatformIcon platform="instagram" />
                       <TextContainer>
-                        <span style={{ color: "#212b36", fontSize: "14px" }}>
-                          Instagram
-                        </span>
+                        <span style={{ color: '#212b36', fontSize: '14px' }}>Instagram</span>
                       </TextContainer>
                     </Stack>
-                    <ToggleSwitch
-                      platform="instagram"
-                      isActive={socialMedia.instagram}
-                    />
+                    <ToggleSwitch platform="instagram" isActive={socialMedia.instagram} />
                   </Stack>
                 </div>
 
                 {/* Twitter Toggle */}
-                <div
-                  style={{
-                    padding: "12px 0",
-                    borderBottom: "1px solid #f4f6f8",
-                  }}
-                >
+                <div style={{ padding: '12px 0', borderBottom: '1px solid #f4f6f8' }}>
                   <Stack distribution="equalSpacing" alignment="center">
                     <Stack alignment="center" spacing="tight">
                       <PlatformIcon platform="twitter" />
                       <TextContainer>
-                        <span style={{ color: "#212b36", fontSize: "14px" }}>
-                          Twitter
-                        </span>
+                        <span style={{ color: '#212b36', fontSize: '14px' }}>Twitter</span>
                       </TextContainer>
                     </Stack>
-                    <ToggleSwitch
-                      platform="twitter"
-                      isActive={socialMedia.twitter}
-                    />
+                    <ToggleSwitch platform="twitter" isActive={socialMedia.twitter} />
                   </Stack>
                 </div>
 
                 {/* Pinterest Toggle */}
-                <div style={{ padding: "12px 0" }}>
+                <div style={{ padding: '12px 0' }}>
                   <Stack distribution="equalSpacing" alignment="center">
                     <Stack alignment="center" spacing="tight">
                       <PlatformIcon platform="pinterest" />
                       <TextContainer>
-                        <span style={{ color: "#212b36", fontSize: "14px" }}>
-                          Pinterest
-                        </span>
+                        <span style={{ color: '#212b36', fontSize: '14px' }}>Pinterest</span>
                       </TextContainer>
                     </Stack>
-                    <ToggleSwitch
-                      platform="pinterest"
-                      isActive={socialMedia.pinterest}
-                    />
+                    <ToggleSwitch platform="pinterest" isActive={socialMedia.pinterest} />
                   </Stack>
                 </div>
-              </div>
-              <div style={{ marginTop: "16px" }}>
-                <Card sectioned>
-                  <TextContainer>
-                    <Heading>Share This Page</Heading>
-                  </TextContainer>
-
-                  <div
-                    style={{ display: "flex", gap: "12px", marginTop: "10px" }}
-                  >
-                    {socialMedia.whatsapp && (
-                      <WhatsappShareButton url={shareUrl} title={shareTitle}>
-                        <WhatsappIcon/>
-                      </WhatsappShareButton>
-                    )}
-
-                    {socialMedia.facebook && (
-                      <FacebookShareButton url={shareUrl} quote={shareTitle}>
-                        <FacebookIcon/>
-                      </FacebookShareButton>
-                    )}
-
-                    {socialMedia.twitter && (
-                      <TwitterShareButton url={shareUrl} title={shareTitle}>
-                        <TwitterIcon/>
-                      </TwitterShareButton>
-                    )}
-
-                    {socialMedia.pinterest && (
-                      <PinterestShareButton
-                        url={shareUrl}
-                        media="https://yourimageurl.com"
-                      >
-                        <PinterestIcon/>
-                      </PinterestShareButton>
-                    )}
-
-                    <a
-                      href={`mailto:?subject=${encodeURIComponent(
-                        shareTitle
-                      )}&body=${encodeURIComponent(shareUrl)}`}
-                      style={{ textDecoration: "none" }}
-                    >
-                      <EmailIcon className="fs-2"/>
-                    </a>
-                  </div>
-                </Card>
               </div>
             </Card>
           </div>
 
           {/* Activation Button Section - Added Between Share Platforms and Design Settings */}
-          <div style={{ marginTop: "16px" }}>
+          <div style={{ marginTop: '16px' }}>
             <Card sectioned>
-              <div style={{ textAlign: "center" }}>
+              <div style={{ textAlign: 'center' }}>
                 <TextContainer>
                   <Heading>Activate Social Share Buttons</Heading>
-                  <p style={{ marginBottom: "16px", color: "#637381" }}>
+                  <p style={{ marginBottom: '16px', color: '#637381' }}>
                     Enable social sharing functionality on your store
                   </p>
                 </TextContainer>
@@ -353,13 +240,13 @@ export default function PageName() {
                   destructive={isActivated}
                   size="large"
                   onClick={handleActivation}
-                  style={{ minWidth: "200px" }}
+                  style={{ minWidth: '200px' }}
                 >
-                  {isActivated ? "Deactivate" : "Activate"} Social Sharing
+                  {isActivated ? 'Deactivate' : 'Activate'} Social Sharing
                 </Button>
 
                 {isActivated && (
-                  <div style={{ marginTop: "16px" }}>
+                  <div style={{ marginTop: '16px' }}>
                     <Banner status="success">
                       Social share buttons are currently active on your store
                     </Banner>
@@ -369,7 +256,7 @@ export default function PageName() {
             </Card>
           </div>
 
-          <div style={{ marginTop: "16px" }}>
+          <div style={{ marginTop: '16px' }}>
             <Card sectioned>
               <TextContainer>
                 <Heading>Design Settings</Heading>
@@ -379,9 +266,9 @@ export default function PageName() {
                 <Select
                   label="Button Style"
                   options={[
-                    { label: "Circular", value: "circular" },
-                    { label: "Rounded", value: "rounded" },
-                    { label: "Square", value: "square" },
+                    { label: 'Circular', value: 'circular' },
+                    { label: 'Rounded', value: 'rounded' },
+                    { label: 'Square', value: 'square' }
                   ]}
                   onChange={(value) => setButtonStyle(value)}
                   value={buttonStyle}
@@ -391,10 +278,10 @@ export default function PageName() {
                 <Select
                   label="Button Position"
                   options={[
-                    { label: "Below Add to Cart", value: "below_cart" },
-                    { label: "Above Add to Cart", value: "above_cart" },
-                    { label: "Floating Left", value: "floating_left" },
-                    { label: "Floating Right", value: "floating_right" },
+                    { label: 'Below Add to Cart', value: 'below_cart' },
+                    { label: 'Above Add to Cart', value: 'above_cart' },
+                    { label: 'Floating Left', value: 'floating_left' },
+                    { label: 'Floating Right', value: 'floating_right' }
                   ]}
                   onChange={(value) => setButtonPosition(value)}
                   value={buttonPosition}
@@ -402,55 +289,36 @@ export default function PageName() {
                 />
               </FormLayout>
 
-              <div style={{ marginTop: "16px", textAlign: "right" }}>
+              <div style={{ marginTop: '16px', textAlign: 'right' }}>
                 <Button primary>Save</Button>
               </div>
             </Card>
           </div>
 
           {/* MetaMatrix Section */}
-          <div style={{ marginTop: "16px" }}>
+          <div style={{ marginTop: '16px' }}>
             <Card sectioned>
               <Stack distribution="equalSpacing">
                 <Heading>Also Try This</Heading>
               </Stack>
 
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  textAlign: "center",
-                  padding: "16px 0 0 0",
-                }}
-              >
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                padding: '16px 0 0 0'
+              }}>
                 <MetaMatrixLogo />
 
-                <div style={{ margin: "20px 0" }}>
+                <div style={{ margin: '20px 0' }}>
                   <TextContainer>
-                    <p
-                      style={{
-                        fontSize: "15px",
-                        color: "#637381",
-                        maxWidth: "600px",
-                        margin: "0 auto 24px auto",
-                      }}
-                    >
-                      This app is powered by MetaMatrix, a leading provider of
-                      e-commerce enhancement tools. Our mission is to help you
-                      boost engagement and drive more sales through innovative
-                      social sharing solutions.
+                    <p style={{ fontSize: '15px', color: '#637381', maxWidth: '600px', margin: '0 auto 24px auto' }}>
+                      This app is powered by MetaMatrix, a leading provider of e-commerce enhancement tools.
+                      Our mission is to help you boost engagement and drive more sales through innovative social sharing solutions.
                     </p>
-                    <p
-                      style={{
-                        fontSize: "15px",
-                        color: "#637381",
-                        maxWidth: "600px",
-                        margin: "0 auto",
-                      }}
-                    >
-                      Unlock additional features like analytics, custom designs,
-                      and advanced sharing options with our premium plans.
+                    <p style={{ fontSize: '15px', color: '#637381', maxWidth: '600px', margin: '0 auto' }}>
+                      Unlock additional features like analytics, custom designs, and advanced sharing options with our premium plans.
                     </p>
                   </TextContainer>
                 </div>
@@ -459,13 +327,13 @@ export default function PageName() {
                   primary
                   size="large"
                   icon={<Icon source={ExternalMinor} />}
-                  style={{ minWidth: "250px" }}
-                  onClick={() => window.open("https://metamatrix.io", "_blank")}
+                  style={{ minWidth: '250px' }}
+                  onClick={() => window.open('https://metamatrix.io', '_blank')}
                 >
                   Explore MetaMatrix Solutions
                 </Button>
 
-                <div style={{ marginTop: "16px" }}>
+                <div style={{ marginTop: '16px' }}>
                   <Link url="https://metamatrix.io/support" external>
                     Need help? Contact MetaMatrix Support
                   </Link>
