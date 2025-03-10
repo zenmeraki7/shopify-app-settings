@@ -16,8 +16,8 @@
     },
     {
       "type": "checkbox",
-      "id": "show_facebook",
-      "label": "Show Facebook",
+      "id": "show_messenger",
+      "label": "Show Messenger",
       "default": true
     },
     {
@@ -40,8 +40,8 @@
     },
     {
       "type": "checkbox",
-      "id": "show_email",
-      "label": "Show Email",
+      "id": "show_snapchat",
+      "label": "Show Snapchat",
       "default": true
     }
   ]
@@ -97,35 +97,67 @@
   -%}
   
   <div class="social-share-buttons">
-    {% if block.settings.show_facebook %}
-      <a href="https://www.facebook.com/sharer/sharer.php?u={{ product_url }}" target="_blank" class="social-btn fb">
-        <img src="{{ 'facebook.png' | asset_url }}" alt="Facebook">
+    
+    {% if block.settings.show_messenger %}
+      <a href="https://www.messenger.com/new?link={{ product_url | url_encode }}"
+         target="_blank" rel="noopener" class="social-btn messenger"
+         onclick="copyAndOpen(event, '{{ product_url }}', this.href)">
+        <img src="{{ 'messenger.png' | asset_url }}" alt="Messenger">
       </a>
     {% endif %}
 
     {% if block.settings.show_twitter %}
-      <a href="https://twitter.com/intent/tweet?text={{ product_title }}&url={{ product_url }}&image={{ image_url }}" target="_blank" class="social-btn twitter">
+      <a href="https://twitter.com/messages/compose" 
+         target="_blank" class="social-btn twitter"
+         onclick="copyAndOpen(event, '{{ product_url }}', this.href)">
         <img src="{{ 'x.png' | asset_url }}" alt="Twitter">
       </a>
     {% endif %}
 
     {% if block.settings.show_instagram %}
-      <a href="https://www.instagram.com/" target="_blank" class="social-btn insta">
+      <a href="https://www.instagram.com/direct/inbox/" 
+         target="_blank" class="social-btn insta"
+         onclick="copyAndOpen(event, '{{ product_url }}', this.href)">
         <img src="{{ 'instagram.jpeg' | asset_url }}" alt="Instagram">
       </a>
     {% endif %}
 
     {% if block.settings.show_whatsapp %}
-      <a href="https://api.whatsapp.com/send?text={{ product_title }}%20{{ product_url }}" target="_blank" class="social-btn whatsapp">
+      <a href="https://api.whatsapp.com/send?text={{ product_title }}%20{{ product_url | url_encode }}"
+         target="_blank" rel="noopener" class="social-btn whatsapp"
+         aria-label="Share on WhatsApp">
         <img src="{{ 'whatsapp.png' | asset_url }}" alt="WhatsApp">
       </a>
     {% endif %}
 
-    {% if block.settings.show_email %}
-      {% assign email_body = "Check out this product: " | append: product_title | append: " " | append: product_url %}
-      <a href="mailto:?subject={{ product_title }}&body={{ email_body }}" class="social-btn email">
-        <img src="{{ 'email.png' | asset_url }}" alt="Email">
+    {% if block.settings.show_snapchat %}
+      <a href="https://www.snapchat.com/share?url={{ product_url | url_encode }}"
+         target="_blank" class="social-btn snapchat"
+         onclick="copyAndOpen(event, '{{ product_url }}', this.href)">
+        <img src="{{ 'snapchat.png' | asset_url }}" alt="Snapchat">
       </a>
     {% endif %}
+
   </div>
 </div>
+
+
+<script>
+function copyAndOpen(event, link, url) {
+  event.preventDefault(); // Prevent immediate navigation
+
+  navigator.clipboard.writeText(link)
+    .then(() => {
+      console.log("Link copied to clipboard:", link);
+      setTimeout(() => {
+        window.open(url, "_blank"); // Open the social media share link
+      }, 300); // Small delay to ensure the copy function runs
+    })
+    .catch(err => {
+      console.error("Failed to copy link:", err);
+      window.open(url, "_blank"); // Open link anyway if copying fails
+    });
+}
+
+</script>
+
