@@ -2,6 +2,7 @@
 
 client_id = "b14298e0daadbc2084bd859745a15091"
 application_url = "https://journey-ratio-fiber-officer.trycloudflare.com"
+application_url = "https://volumes-figured-yang-speech.trycloudflare.com"
 embedded = true
 name = "app-settings"
 handle = "app-settings-1"
@@ -23,6 +24,9 @@ redirect_urls = [
   "https://journey-ratio-fiber-officer.trycloudflare.com/auth/callback",
   "https://journey-ratio-fiber-officer.trycloudflare.com/auth/shopify/callback",
   "https://journey-ratio-fiber-officer.trycloudflare.com/api/auth/callback"
+  "https://volumes-figured-yang-speech.trycloudflare.com/auth/callback",
+  "https://volumes-figured-yang-speech.trycloudflare.com/auth/shopify/callback",
+  "https://volumes-figured-yang-speech.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
