@@ -97,11 +97,15 @@
   -%}
   
   <div class="social-share-buttons">
-    {% if block.settings.show_facebook %}
-      <a href="https://www.facebook.com/sharer/sharer.php?u={{ product_url }}" target="_blank" class="social-btn fb">
-        <img src="{{ 'facebook.png' | asset_url }}" alt="Facebook">
-      </a>
-    {% endif %}
+   {% if block.settings.show_facebook %}
+  <a href="https://www.facebook.com/sharer/sharer.php?u={{ product_url | url_encode }}"
+     target="_blank" rel="noopener" class="social-btn fb"
+     aria-label="Share on Facebook">
+    <img src="{{ 'facebook.png' | asset_url }}" alt="Facebook">
+  </a>
+{% endif %}
+
+
 
     {% if block.settings.show_twitter %}
       <a href="https://twitter.com/intent/tweet?text={{ product_title }}&url={{ product_url }}&image={{ image_url }}" target="_blank" class="social-btn twitter">
@@ -115,11 +119,13 @@
       </a>
     {% endif %}
 
-    {% if block.settings.show_whatsapp %}
-      <a href="https://api.whatsapp.com/send?text={{ product_title }}%20{{ product_url }}" target="_blank" class="social-btn whatsapp">
-        <img src="{{ 'whatsapp.png' | asset_url }}" alt="WhatsApp">
-      </a>
-    {% endif %}
+   {% if block.settings.show_whatsapp %}
+  <a href="https://api.whatsapp.com/send?text={{ product_title }}%20{{ product_url | url_encode }}"
+     target="_blank" rel="noopener" class="social-btn whatsapp"
+     aria-label="Share on WhatsApp">
+    <img src="{{ 'whatsapp.png' | asset_url }}" alt="WhatsApp">
+  </a>
+{% endif %}
 
     {% if block.settings.show_email %}
       {% assign email_body = "Check out this product: " | append: product_title | append: " " | append: product_url %}

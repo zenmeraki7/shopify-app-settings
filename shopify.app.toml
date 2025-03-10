@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b14298e0daadbc2084bd859745a15091"
-application_url = "https://hash-fragrance-je-lightweight.trycloudflare.com"
+application_url = "https://miscellaneous-existed-nhs-synthesis.trycloudflare.com"
 embedded = true
 name = "app-settings"
 handle = "app-settings-1"
@@ -9,6 +9,7 @@ handle = "app-settings-1"
 [build]
 include_config_on_deploy = true
 automatically_update_urls_on_dev = true
+dev_store_url = "demo-zen-store.myshopify.com"
 
 [webhooks]
 api_version = "2025-01"
@@ -19,9 +20,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://hash-fragrance-je-lightweight.trycloudflare.com/auth/callback",
-  "https://hash-fragrance-je-lightweight.trycloudflare.com/auth/shopify/callback",
-  "https://hash-fragrance-je-lightweight.trycloudflare.com/api/auth/callback"
+  "https://miscellaneous-existed-nhs-synthesis.trycloudflare.com/auth/callback",
+  "https://miscellaneous-existed-nhs-synthesis.trycloudflare.com/auth/shopify/callback",
+  "https://miscellaneous-existed-nhs-synthesis.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
