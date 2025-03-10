@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b14298e0daadbc2084bd859745a15091"
-application_url = "https://hash-fragrance-je-lightweight.trycloudflare.com"
+application_url = "https://journey-ratio-fiber-officer.trycloudflare.com"
 embedded = true
 name = "app-settings"
 handle = "app-settings-1"
@@ -19,9 +19,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://hash-fragrance-je-lightweight.trycloudflare.com/auth/callback",
-  "https://hash-fragrance-je-lightweight.trycloudflare.com/auth/shopify/callback",
-  "https://hash-fragrance-je-lightweight.trycloudflare.com/api/auth/callback"
+  "https://journey-ratio-fiber-officer.trycloudflare.com/auth/callback",
+  "https://journey-ratio-fiber-officer.trycloudflare.com/auth/shopify/callback",
+  "https://journey-ratio-fiber-officer.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
