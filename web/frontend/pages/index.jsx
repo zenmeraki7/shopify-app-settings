@@ -296,8 +296,7 @@ const SocialShareLanding = () => {
                 {[
                   "Unlimited product sharing",
                   "All social networks supported",
-                  "Custom sharing messages",
-                  "Analytics dashboard",
+                  "Custom buttons",
                   "Priority support",
                 ].map((feature, index) => (
                   <Stack key={index} alignment="center" spacing="tight">
