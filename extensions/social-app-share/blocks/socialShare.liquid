@@ -204,22 +204,22 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const apiEndpoint = `${location.origin}/apps/proxy?shop=${Shopify.shop}`;
+    console.log("socialShare")
+  const apiEndpoint = `${location.origin}/apps/proxy-1?shop=${Shopify.shop}`;
   const loadingElement = document.getElementById('socialShareLoading');
   const contentElement = document.getElementById('socialShareContent');
   const errorElement = document.getElementById('socialShareError');
-  
   // Make API call to verify access
   fetch(apiEndpoint, {
     method: 'GET',
-    headers: {
+    headers: {  
       'Content-Type': 'application/json',
     }
   })
   .then(response => {
-    if (!response.ok) {
+if (!response.ok) {
       throw new Error('API verification failed');
-    }
+    }
     return response.json();
   })
   .then(data => {
