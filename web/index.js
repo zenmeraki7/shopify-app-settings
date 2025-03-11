@@ -43,7 +43,7 @@ app.use("/storefront/*", authenticateUser);
 app.use(express.json());
 
 app.get("/storefront/subscription",checkActivePlan)
-app.get("/api/subscribe",createSubscriptionPlan)
+app.post("/api/subscribe",createSubscriptionPlan)
 
 app.get("/api/products/count", async (_req, res) => {
   const client = new shopify.api.clients.Graphql({
