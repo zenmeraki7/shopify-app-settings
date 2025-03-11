@@ -98,6 +98,7 @@ const createShopifyCharge = async (session, planDetails) => {
         status: appSubscription.status,
         confirmationUrl,
         createdAt: appSubscription.createdAt,
+        currentPeriodEnd: appSubscription.currentPeriodEnd,
       };
     } catch (error) {
       console.log("--------------------------------");
@@ -156,8 +157,10 @@ console.log(charge.confirmationUrl)
   };
 
   export const checkActivePlan = async (req, res) => {
-    const { session } = req
-  
+    let session = req.session;
+    if (!session) {
+      session = res.locals.shopify.session;
+    }
     try {
       const client = new shopify.api.clients.Graphql({ session });
   
