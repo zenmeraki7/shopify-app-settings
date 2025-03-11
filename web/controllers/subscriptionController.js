@@ -112,7 +112,8 @@ const createShopifyCharge = async (session, planDetails) => {
   // Create Subscription Plan API Endpoint
 export const createSubscriptionPlan = async (req, res) => {
     const { planType, billingCycle } = req.body;
-  
+  // const planType = 'basic'
+  // const billingCycle = 'monthly'
     const validPlans = {
       basic_monthly: {
         name: "Basic (Monthly)",
@@ -146,7 +147,7 @@ export const createSubscriptionPlan = async (req, res) => {
           session.shop
         )}/apps/app-settings-1`,
       });
-
+console.log(charge.confirmationUrl)
       res.status(200).json({message:"Subscription created successfully",charge});
     } catch (error) {
       console.error("Error creating subscription:", error);
