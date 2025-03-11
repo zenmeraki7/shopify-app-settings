@@ -15,6 +15,12 @@
       "default": "Share this product"
     },
     {
+      "type": "text",
+      "id": "error_message",
+      "label": "Error Message",
+      "default": "Please subscribe to access the social sharing feature"
+    },
+    {
       "type": "checkbox",
       "id": "show_messenger",
       "label": "Show Messenger",
@@ -45,16 +51,16 @@
       "default": true
     },
     {
-  "type": "select",
-  "id": "button_shape",
-  "label": "Button Shape",
-  "options": [
-    { "value": "circle", "label": "Circle" },
-    { "value": "rounded", "label": "Rounded Rectangle" },
-    { "value": "square", "label": "Square" }
-  ],
-  "default": "circle"
-}
+      "type": "select",
+      "id": "button_shape",
+      "label": "Button Shape",
+      "options": [
+        { "value": "circle", "label": "Circle" },
+        { "value": "rounded", "label": "Rounded Rectangle" },
+        { "value": "square", "label": "Square" }
+      ],
+      "default": "circle"
+    }
   ]
 }
 {% endschema %}
@@ -83,9 +89,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
     background-color: #ffffff; 
-    transition: transform 0.2s ease-in-out,box-shadow 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     border: 2px solid #ddd;
   }
 
@@ -94,11 +99,13 @@
     height: 32px;
     object-fit: contain;
   }
+  
   .social-btn:hover {
     transform: scale(1.1);
-     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
   }
-   /* Dynamic Button Shape Styling */
+  
+  /* Dynamic Button Shape Styling */
   {% if block.settings.button_shape == "circle" %}
     .social-btn {
       border-radius: 50%; /* Circular buttons */
@@ -113,65 +120,122 @@
       border-radius: 0; /* Square buttons */
     }
   {% endif %}
-
+  
+  .social-share-error {
+    text-align: center;
+    padding: 20px;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin: 10px 0;
+    display: none;
+  }
+  
+  .social-share-loading {
+    text-align: center;
+    padding: 20px;
+  }
 </style>
 
-<div class="social-share-container">
-  <p class="social-share-heading">{{ block.settings.heading }}</p>
-
-  {%- liquid
-    assign product_url = shop.url | append: product.url
-    assign product_title = product.title | url_encode
-    assign image_url = product.featured_image | img_url: 'large' | url_encode
-  -%}
+<div id="socialShareSection" class="social-share-section">
+  <div id="socialShareLoading" class="social-share-loading">
+    <p>Loading sharing options...</p>
+  </div>
   
-  <div class="social-share-buttons">
+  <div id="socialShareError" class="social-share-error">
+    {{ block.settings.error_message }}
+  </div>
+
+  <div id="socialShareContent" class="social-share-container" style="display: none;">
+    <p class="social-share-heading">{{ block.settings.heading }}</p>
+
+    {%- liquid
+      assign product_url = shop.url | append: product.url
+      assign product_title = product.title | url_encode
+      assign image_url = product.featured_image | img_url: 'large' | url_encode
+    -%}
     
-    {% if block.settings.show_messenger %}
-      <a href="https://www.messenger.com/new?link={{ product_url | url_encode }}"
-         target="_blank" rel="noopener" class="social-btn messenger"
-         onclick="copyAndOpen(event, '{{ product_url }}', this.href)">
-        <img src="{{ 'messenger.png' | asset_url }}" alt="Messenger">
-      </a>
-    {% endif %}
+    <div class="social-share-buttons">
+      
+      {% if block.settings.show_messenger %}
+        <a href="https://www.messenger.com/new?link={{ product_url | url_encode }}"
+           target="_blank" rel="noopener" class="social-btn messenger"
+           onclick="copyAndOpen(event, '{{ product_url }}', this.href)">
+          <img src="{{ 'messenger.png' | asset_url }}" alt="Messenger">
+        </a>
+      {% endif %}
 
-    {% if block.settings.show_twitter %}
-      <a href="https://twitter.com/messages/compose" 
-         target="_blank" class="social-btn twitter"
-         onclick="copyAndOpen(event, '{{ product_url }}', this.href)">
-        <img src="{{ 'x.png' | asset_url }}" alt="Twitter">
-      </a>
-    {% endif %}
+      {% if block.settings.show_twitter %}
+        <a href="https://twitter.com/messages/compose" 
+           target="_blank" class="social-btn twitter"
+           onclick="copyAndOpen(event, '{{ product_url }}', this.href)">
+          <img src="{{ 'x.png' | asset_url }}" alt="Twitter">
+        </a>
+      {% endif %}
 
-    {% if block.settings.show_instagram %}
-      <a href="https://www.instagram.com/direct/inbox/" 
-         target="_blank" class="social-btn insta"
-         onclick="copyAndOpen(event, '{{ product_url }}', this.href)">
-        <img src="{{ 'instagram.jpeg' | asset_url }}" alt="Instagram">
-      </a>
-    {% endif %}
+      {% if block.settings.show_instagram %}
+        <a href="https://www.instagram.com/direct/inbox/" 
+           target="_blank" class="social-btn insta"
+           onclick="copyAndOpen(event, '{{ product_url }}', this.href)">
+          <img src="{{ 'instagram.jpeg' | asset_url }}" alt="Instagram">
+        </a>
+      {% endif %}
 
-    {% if block.settings.show_whatsapp %}
-      <a href="https://api.whatsapp.com/send?text={{ product_title }}%20{{ product_url | url_encode }}"
-         target="_blank" rel="noopener" class="social-btn whatsapp"
-         aria-label="Share on WhatsApp">
-        <img src="{{ 'whatsapp.png' | asset_url }}" alt="WhatsApp">
-      </a>
-    {% endif %}
+      {% if block.settings.show_whatsapp %}
+        <a href="https://api.whatsapp.com/send?text={{ product_title }}%20{{ product_url | url_encode }}"
+           target="_blank" rel="noopener" class="social-btn whatsapp"
+           aria-label="Share on WhatsApp">
+          <img src="{{ 'whatsapp.png' | asset_url }}" alt="WhatsApp">
+        </a>
+      {% endif %}
 
-    {% if block.settings.show_snapchat %}
-      <a href="https://www.snapchat.com/share?url={{ product_url | url_encode }}"
-         target="_blank" class="social-btn snapchat"
-         onclick="copyAndOpen(event, '{{ product_url }}', this.href)">
-        <img src="{{ 'snapchat.png' | asset_url }}" alt="Snapchat">
-      </a>
-    {% endif %}
+      {% if block.settings.show_snapchat %}
+        <a href="https://www.snapchat.com/share?url={{ product_url | url_encode }}"
+           target="_blank" class="social-btn snapchat"
+           onclick="copyAndOpen(event, '{{ product_url }}', this.href)">
+          <img src="{{ 'snapchat.png' | asset_url }}" alt="Snapchat">
+        </a>
+      {% endif %}
 
+    </div>
   </div>
 </div>
 
-
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const apiEndpoint = `${location.origin}/apps/proxy?shop=${Shopify.shop}`;
+  const loadingElement = document.getElementById('socialShareLoading');
+  const contentElement = document.getElementById('socialShareContent');
+  const errorElement = document.getElementById('socialShareError');
+  
+  // Make API call to verify access
+  fetch(apiEndpoint, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('API verification failed');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // If API call is successful, show the social share content
+    loadingElement.style.display = 'none';
+    contentElement.style.display = 'block';
+    console.log('API verification successful:', data);
+  })
+  .catch(error => {
+    // If API call fails, show the error message
+    loadingElement.style.display = 'none';
+    errorElement.style.display = 'block';
+    console.error('API verification error:', error);
+  });
+});
+
 function copyAndOpen(event, link, url) {
   event.preventDefault(); // Prevent immediate navigation
 
@@ -187,6 +251,4 @@ function copyAndOpen(event, link, url) {
       window.open(url, "_blank"); // Open link anyway if copying fails
     });
 }
-
 </script>
-
