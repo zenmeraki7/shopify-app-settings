@@ -98,6 +98,7 @@ const createShopifyCharge = async (session, planDetails) => {
         status: appSubscription.status,
         confirmationUrl,
         createdAt: appSubscription.createdAt,
+        currentPeriodEnd: appSubscription.currentPeriodEnd,
       };
     } catch (error) {
       console.log("--------------------------------");
