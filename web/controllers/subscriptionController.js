@@ -156,8 +156,10 @@ console.log(charge.confirmationUrl)
   };
 
   export const checkActivePlan = async (req, res) => {
-    const { session } = req
-  
+    let session = req.session;
+    if (!session) {
+      session = res.locals.shopify.session;
+    }
     try {
       const client = new shopify.api.clients.Graphql({ session });
   
