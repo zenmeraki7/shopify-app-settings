@@ -7,6 +7,8 @@ import serveStatic from "serve-static";
 import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import PrivacyWebhookHandlers from "./privacy.js";
+import { authenticateUser } from "./middlewares/authenticateStorefrontUser.js";
+import { checkActivePlan } from "./controllers/subscriptionController.js";
 
 const PORT = parseInt(
   process.env.BACKEND_PORT || process.env.PORT || "3000",
@@ -36,8 +38,11 @@ app.post(
 // also add a proxy rule for them in web/frontend/vite.config.js
 
 app.use("/api/*", shopify.validateAuthenticatedSession());
+app.use("/storefront/*", authenticateUser);
 
 app.use(express.json());
+
+app.get("/storefront/subscription",checkActivePlan)
 
 app.get("/api/products/count", async (_req, res) => {
   const client = new shopify.api.clients.Graphql({
