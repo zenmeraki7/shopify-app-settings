@@ -1,93 +1,301 @@
+import React, { useEffect, useState } from 'react';
 import {
-  Card,
   Page,
   Layout,
+  Card,
+  Button,
   TextContainer,
-  Image,
+  DisplayText,
+  TextStyle,
   Stack,
-  Link,
-  Text,
-} from "@shopify/polaris";
-import { TitleBar } from "@shopify/app-bridge-react";
-import { useTranslation, Trans } from "react-i18next";
+  Icon,
+  Heading,
+  Banner,
+  Image
+} from '@shopify/polaris';
+import {
+  OrdersMajor,
+  ProductsMajor,
+} from '@shopify/polaris-icons';
 
-import { trophyImage } from "../assets";
+const SocialShareLanding = () => {
+  const [isSubscribed, setIsSubscribed] = useState(null);
 
-import { ProductsCard } from "../components";
-
-export default function HomePage() {
-  const { t } = useTranslation();
+  useEffect(() => {
+    fetch("/api/verify-subscription", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => setIsSubscribed(data.isActive))
+      .catch((error) => {
+        console.error("Error checking subscription:", error);
+        setIsSubscribed(false);
+      });
+  }, []); // Runs only once when the component mounts
+   const createSubscriptionPlan = async () => {
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ planType:"basic", billingCycle:"monthly" }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      
+      // Dynamically create an <a> tag and trigger a click event
+      const link = document.createElement("a");
+      link.href = data.charge.confirmation_url;
+      link.target = "_top"; // Ensures it opens in the top frame (important for Shopify apps)
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link); // Cleanup after click
+    } catch (error) {
+      console.log("Subscription creation error:", error.message);
+      alert("Failed to create subscription. Please try again.");
+    }
+  };
   return (
-    <Page narrowWidth>
-      <TitleBar title={t("HomePage.title")} />
-      <Layout>
-        <Layout.Section>
-          <Card sectioned>
-            <Stack
-              wrap={false}
-              spacing="extraTight"
-              distribution="trailing"
-              alignment="center"
-            >
-              <Stack.Item fill>
-                <TextContainer spacing="loose">
-                  <Text as="h2" variant="headingMd">
-                    {t("HomePage.heading")}
-                  </Text>
-                  <p>
-                    <Trans
-                      i18nKey="HomePage.yourAppIsReadyToExplore"
-                      components={{
-                        PolarisLink: (
-                          <Link url="https://polaris.shopify.com/" external />
-                        ),
-                        AdminApiLink: (
-                          <Link
-                            url="https://shopify.dev/api/admin-graphql"
-                            external
-                          />
-                        ),
-                        AppBridgeLink: (
-                          <Link
-                            url="https://shopify.dev/apps/tools/app-bridge"
-                            external
-                          />
-                        ),
-                      }}
-                    />
-                  </p>
-                  <p>{t("HomePage.startPopulatingYourApp")}</p>
-                  <p>
-                    <Trans
-                      i18nKey="HomePage.learnMore"
-                      components={{
-                        ShopifyTutorialLink: (
-                          <Link
-                            url="https://shopify.dev/apps/getting-started/add-functionality"
-                            external
-                          />
-                        ),
-                      }}
-                    />
-                  </p>
-                </TextContainer>
-              </Stack.Item>
-              <Stack.Item>
-                <div style={{ padding: "0 20px" }}>
-                  <Image
-                    source={trophyImage}
-                    alt={t("HomePage.trophyAltText")}
-                    width={120}
-                  />
-                </div>
-              </Stack.Item>
+    <Page>
+      {/* Hero Section */}
+      <Card sectioned>
+        <Layout>
+          <Layout.Section oneHalf>
+            <Stack vertical spacing="loose">
+              <Stack alignment="center" spacing="tight">
+                <Icon source={OrdersMajor} color="primary" />
+                <TextStyle variation="strong">SocialShare</TextStyle>
+              </Stack>
+              
+              <DisplayText size="large">Boost Your Sales Through Social Sharing</DisplayText>
+              
+              <TextContainer>
+                <p>
+                  SocialShare makes it simple for your customers to share their favorite products on social media, 
+                  driving traffic and increasing conversions for your Shopify store.
+                </p>
+              </TextContainer>
+              
+              <Stack distribution="leading" spacing="tight">
+                <Button outline>Watch Demo</Button>
+              </Stack>
             </Stack>
-          </Card>
-        </Layout.Section>
-        <Layout.Section>
-          <ProductsCard />
-        </Layout.Section>
-      </Layout>
+          </Layout.Section>
+          
+          <Layout.Section oneHalf>
+            <div style={{ position: 'relative' }}>
+              <Image
+                source="/api/placeholder/600/400"
+                alt="SocialShare in action"
+              />
+         
+            </div>
+          </Layout.Section>
+        </Layout>
+      </Card>
+
+      {/* Features Section */}
+      <Card sectioned>
+        <TextContainer>
+          <Heading element="h2">Seamless Social Sharing</Heading>
+        </TextContainer>
+        
+        <Layout>
+          <Layout.Section oneQuarter>
+            <Card>
+              <Card.Section>
+                <Stack alignment="center" distribution="center" spacing="tight">
+                  <div style={{ 
+                    background: 'var(--p-color-bg-primary-subdued)', 
+                    padding: '12px', 
+                    borderRadius: '50%',
+                    marginBottom: '16px' 
+                  }}>
+                    <Icon source={OrdersMajor} color="primary" />
+                  </div>
+                </Stack>
+                <TextContainer spacing="tight">
+                  <Heading>One-click sharing</Heading>
+                  <p>Enable customers to share to multiple platforms with just one click</p>
+                </TextContainer>
+              </Card.Section>
+            </Card>
+          </Layout.Section>
+          
+          <Layout.Section oneQuarter>
+            <Card>
+              <Card.Section>
+                <Stack alignment="center" distribution="center" spacing="tight">
+                  <div style={{ 
+                    background: 'var(--p-color-bg-primary-subdued)', 
+                    padding: '12px', 
+                    borderRadius: '50%',
+                    marginBottom: '16px' 
+                  }}>
+                    <Icon source={ProductsMajor} color="primary" />
+                  </div>
+                </Stack>
+                <TextContainer spacing="tight">
+                  <Heading>Customizable Buttons</Heading>
+                  <p>Adjust button shapes, styles, and sizes to match your brand</p>
+                </TextContainer>
+              </Card.Section>
+            </Card>
+          </Layout.Section>
+          
+        
+        </Layout>
+      </Card>
+
+      {/* How It Works Section */}
+      <Card sectioned>
+        <TextContainer>
+          <Heading element="h2">How SocialShare Works</Heading>
+          <p>Get up and running in minutes with our simple installation process</p>
+        </TextContainer>
+        
+        <Layout>
+          <Layout.Section oneThird>
+            <Card>
+              <Card.Section>
+                <Stack vertical alignment="center" spacing="tight">
+                  <div style={{ 
+                    background: 'var(--p-color-bg-primary)', 
+                    color: 'var(--p-color-text-on-primary)', 
+                    width: '32px', 
+                    height: '32px', 
+                    borderRadius: '50%', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    marginBottom: '16px'
+                  }}>
+                    1
+                  </div>
+                  <Heading>Install the App</Heading>
+                  <p>Add SocialShare to your Shopify store with just one click</p>
+                </Stack>
+              </Card.Section>
+            </Card>
+          </Layout.Section>
+          
+          <Layout.Section oneThird>
+            <Card>
+              <Card.Section>
+                <Stack vertical alignment="center" spacing="tight">
+                  <div style={{ 
+                    background: 'var(--p-color-bg-primary)', 
+                    color: 'var(--p-color-text-on-primary)', 
+                    width: '32px', 
+                    height: '32px', 
+                    borderRadius: '50%', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    marginBottom: '16px'
+                  }}>
+                    2
+                  </div>
+                  <Heading>Customize Settings</Heading>
+                  <p>Choose which products can be shared and how they appear</p>
+                </Stack>
+              </Card.Section>
+            </Card>
+          </Layout.Section>
+          
+          <Layout.Section oneThird>
+            <Card>
+              <Card.Section>
+                <Stack vertical alignment="center" spacing="tight">
+                  <div style={{ 
+                    background: 'var(--p-color-bg-primary)', 
+                    color: 'var(--p-color-text-on-primary)', 
+                    width: '32px', 
+                    height: '32px', 
+                    borderRadius: '50%', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    marginBottom: '16px'
+                  }}>
+                    3
+                  </div>
+                  <Heading>Increase Sales</Heading>
+                  <p>Watch as customers share products and drive new traffic to your store</p>
+                </Stack>
+              </Card.Section>
+            </Card>
+          </Layout.Section>
+        </Layout>
+      </Card>
+
+      {/* Pricing Section */}
+<Card sectioned>
+  <TextContainer>
+    <Heading element="h2">Simple, Transparent Pricing</Heading>
+    <p>Start boosting your social sales today</p>
+  </TextContainer>
+
+  <div style={{ maxWidth: "450px", margin: "0 auto" }}>
+    <Card
+      primaryFooterAction={{
+        content: "Subscribe",
+        onAction: createSubscriptionPlan, // Call the function on button click
+      }}
+    >
+      <Card.Section>
+        <div
+          style={{
+            background: "var(--p-color-bg-primary)",
+            color: "var(--p-color-text-on-primary)",
+            padding: "16px",
+            textAlign: "center",
+            marginTop: "-20px",
+            marginLeft: "-20px",
+            marginRight: "-20px",
+          }}
+        >
+          <Heading element="h3">Premium Plan</Heading>
+        </div>
+      </Card.Section>
+
+      <Card.Section>
+        <div style={{ textAlign: "center", marginBottom: "24px" }}>
+          <DisplayText size="medium">$19</DisplayText>
+          <TextStyle variation="subdued">/month</TextStyle>
+        </div>
+
+        <Stack vertical>
+          {[
+            "Unlimited product sharing",
+            "All social networks supported",
+            "Custom sharing messages",
+            "Analytics dashboard",
+            "Priority support",
+          ].map((feature, index) => (
+            <Stack key={index} alignment="center" spacing="tight">
+              <div style={{ color: "var(--p-color-text-success)" }}>✓</div>
+              <p>{feature}</p>
+            </Stack>
+          ))}
+        </Stack>
+      </Card.Section>
+    </Card>
+  </div>
+</Card>
+
+
+     
     </Page>
   );
-}
+};
+
+export default SocialShareLanding;
