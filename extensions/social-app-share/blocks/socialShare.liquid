@@ -43,7 +43,18 @@
       "id": "show_snapchat",
       "label": "Show Snapchat",
       "default": true
-    }
+    },
+    {
+  "type": "select",
+  "id": "button_shape",
+  "label": "Button Shape",
+  "options": [
+    { "value": "circle", "label": "Circle" },
+    { "value": "rounded", "label": "Rounded Rectangle" },
+    { "value": "square", "label": "Square" }
+  ],
+  "default": "circle"
+}
   ]
 }
 {% endschema %}
@@ -67,24 +78,42 @@
   }
 
   .social-btn {
-    width: 50px;
-    height: 50px; 
+    width: 60px;
+    height: 60px; 
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #f0f0f0; 
-    transition: transform 0.2s ease-in-out;
+    background-color: #ffffff; 
+    transition: transform 0.2s ease-in-out,box-shadow 0.2s ease-in-out;
+    border: 2px solid #ddd;
   }
 
   .social-btn img {
-    width: 28px; 
-    height: 28px;
+    width: 32px; 
+    height: 32px;
     object-fit: contain;
   }
   .social-btn:hover {
     transform: scale(1.1);
+     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
   }
+   /* Dynamic Button Shape Styling */
+  {% if block.settings.button_shape == "circle" %}
+    .social-btn {
+      border-radius: 50%; /* Circular buttons */
+    }
+  {% elsif block.settings.button_shape == "rounded" %}
+    .social-btn {
+      border-radius: 15px; /* Rounded rectangle buttons */
+      padding: 10px 15px;
+    }
+  {% elsif block.settings.button_shape == "square" %}
+    .social-btn {
+      border-radius: 0; /* Square buttons */
+    }
+  {% endif %}
+
 </style>
 
 <div class="social-share-container">
