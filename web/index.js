@@ -80,14 +80,14 @@ app.use(shopify.cspHeaders());
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
 app.use("/*", shopify.ensureInstalledOnShop(), async (_req, res, _next) => {
-  return res
+  res
     .status(200)
     .set("Content-Type", "text/html")
     .send(
-      readFileSync(join(STATIC_PATH, "index.html"))
-        .toString()
+      readFileSync(join(STATIC_PATH, "index.html"), "utf8")
         .replace("%VITE_SHOPIFY_API_KEY%", process.env.SHOPIFY_API_KEY || "")
     );
 });
+
 
 app.listen(PORT);
