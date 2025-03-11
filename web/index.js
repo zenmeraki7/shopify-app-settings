@@ -8,7 +8,7 @@ import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import PrivacyWebhookHandlers from "./privacy.js";
 import { authenticateUser } from "./middlewares/authenticateStorefrontUser.js";
-import { checkActivePlan } from "./controllers/subscriptionController.js";
+import { checkActivePlan, createSubscriptionPlan } from "./controllers/subscriptionController.js";
 
 const PORT = parseInt(
   process.env.BACKEND_PORT || process.env.PORT || "3000",
@@ -43,6 +43,7 @@ app.use("/storefront/*", authenticateUser);
 app.use(express.json());
 
 app.get("/storefront/subscription",checkActivePlan)
+app.post("/api/subscribe",createSubscriptionPlan)
 
 app.get("/api/products/count", async (_req, res) => {
   const client = new shopify.api.clients.Graphql({
