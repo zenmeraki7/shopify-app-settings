@@ -206,6 +206,7 @@ console.log(charge.confirmationUrl)
             name: activeSubscription.name,
             price:
               activeSubscription.lineItems[0]?.plan.pricingDetails.price.amount,
+              id: activeSubscription.id,
           },
         });
       } else {
