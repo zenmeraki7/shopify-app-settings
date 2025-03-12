@@ -146,7 +146,7 @@ export const createSubscriptionPlan = async (req, res) => {
         trial_days: 0,
         return_url: `https://admin.shopify.com/store/${extractShopName(
           session.shop
-        )}/apps/app-settings-1`,
+        )}/apps/customizer-39`,
       });
 console.log(charge.confirmationUrl)
       res.status(200).json({message:"Subscription created successfully",charge});
