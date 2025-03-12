@@ -3,15 +3,22 @@
   "version": "1.0.0",
   "main": "web/index.js",
   "license": "UNLICENSED",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "shopify": "shopify",
-    "build": "shopify app build",
+    "build": "npm install -g @shopify/cli @shopify/app && cd web && npm install && npm run build",
+    "start": "cd web && npm start",
     "dev": "shopify app dev",
     "info": "shopify app info",
     "generate": "shopify app generate",
     "deploy": "shopify app deploy"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@shopify/app": "^3.x",
+    "@shopify/cli": "^3.x"
+  },
   "author": "rojal",
   "private": true,
   "workspaces": [
