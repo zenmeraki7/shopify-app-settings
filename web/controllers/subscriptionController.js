@@ -219,4 +219,57 @@ console.log(charge.confirmationUrl)
       res.status(500).json({ error: "Error verifying subscription" });
     }
   };
+
+  export const deleteSubscriptionPlans = async (req, res) => {
+    try {
+      const session = res.locals.shopify.session;
+      const { id } = req.body;
+  
+      const client = new shopify.api.clients.Graphql({ session });
+  
+      // GraphQL mutation to delete the subscription plan
+      const mutation = `
+        mutation appSubscriptionCancel($id: ID!) {
+          appSubscriptionCancel(id: $id) {
+            userErrors {
+              field
+              message
+            }
+            appSubscription {
+              id
+            }
+          }
+        }
+      `;
+  
+      const response = await client.query({
+        data: {
+          query: mutation,
+          variables: { id: `gid://shopify/AppSubscription/${id}` },
+        },
+      });
+  
+      const { userErrors, appSubscription } =
+        response.body.data.appSubscriptionCancel;
+  
+      // Handle any user errors returned by the mutation
+      if (userErrors && userErrors.length > 0) {
+        console.error("User errors:", userErrors);
+        return res
+          .status(400)
+          .json({ error: userErrors.map((err) => err.message).join(", ") });
+      }
+  
+      if (!appSubscription) {
+        return res
+          .status(404)
+          .json({ error: "Subscription plan not found or already canceled." });
+      }
+  
+      res.status(200).json("Deleted successfully");
+    } catch (error) {
+      console.error("Error deleting subscriptions:", error);
+      res.status(500).json({ error: error.message });
+    }
+  };
   
