@@ -1,29 +1,44 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "b14298e0daadbc2084bd859745a15091"
-application_url = "https://sie-kenya-restaurants-sequences.trycloudflare.com"
+client_id = "5b7410abd25ebb9a88bb360204b9b8d8"
+application_url = "https://sole-undo-graduates-comment.trycloudflare.com/"
 embedded = true
-name = "app-settings"
-handle = "app-settings-1"
-
-[build]
-include_config_on_deploy = true
-automatically_update_urls_on_dev = true
-dev_store_url = "demo-zen-store.myshopify.com"
+name = "Tap2Share"
+handle = "customizer-39"
 
 [webhooks]
-api_version = "2025-01"
+api_version = "2024-07"
+
+  [[webhooks.subscriptions]]
+  uri = "https://metamatrix-bulk-editor.fly.dev/gdpr/webhooks/customer_data_request"
+  compliance_topics = [ "customers/data_request" ]
+
+  [[webhooks.subscriptions]]
+  uri = "https://metamatrix-bulk-editor.fly.dev/gdpr/webhooks/shop_data_delete"
+  compliance_topics = [ "shop/redact" ]
+
+  [[webhooks.subscriptions]]
+  uri = "https://metamatrix-bulk-editor.fly.dev/webhooks/customer_data_delete"
+  compliance_topics = [ "customers/redact" ]
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+scopes = "read_products,write_products"
 
 [auth]
 redirect_urls = [
-  "https://sie-kenya-restaurants-sequences.trycloudflare.com/auth/callback",
-  "https://sie-kenya-restaurants-sequences.trycloudflare.com/auth/shopify/callback",
-  "https://sie-kenya-restaurants-sequences.trycloudflare.com/api/auth/callback"
+  "https://sole-undo-graduates-comment.trycloudflare.com/auth/callback",
+  "https://sole-undo-graduates-comment.trycloudflare.com/auth/shopify/callback",
+  "https://sole-undo-graduates-comment.trycloudflare.com/api/auth/callback"
 ]
+
+[app_proxy]
+url = "https://sole-undo-graduates-comment.trycloudflare.com/search/query"
+subpath = "proxy"
+prefix = "apps"
 
 [pos]
 embedded = false
+
+[build]
+include_config_on_deploy = true
