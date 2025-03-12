@@ -10,13 +10,16 @@ import {
   Stack,
   Icon,
   Heading,
-  Banner,
+  Link,
   Image,
 } from "@shopify/polaris";
 import { OrdersMajor, ProductsMajor } from "@shopify/polaris-icons";
+import { ExternalMinor } from "@shopify/polaris-icons";
 
 const SocialShareLanding = () => {
   const [isSubscribed, setIsSubscribed] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [planDetails, setPlanDetails] = useState(null);
 
   useEffect(() => {
     fetch("/api/verify-subscription", {
@@ -26,12 +29,24 @@ const SocialShareLanding = () => {
       },
     })
       .then((response) => response.json())
-      .then((data) => setIsSubscribed(data.isActive))
+      .then((data) => {
+        // Check if the response has active property
+        setIsSubscribed(data.active || false);
+
+        // Store plan details if available
+        if (data.activePlan) {
+          setPlanDetails(data.activePlan);
+        }
+
+        setIsLoading(false);
+      })
       .catch((error) => {
         console.error("Error checking subscription:", error);
         setIsSubscribed(false);
+        setIsLoading(false);
       });
   }, []); // Runs only once when the component mounts
+
   const createSubscriptionPlan = async () => {
     try {
       const response = await fetch("/api/subscribe", {
@@ -60,6 +75,41 @@ const SocialShareLanding = () => {
       alert("Failed to create subscription. Please try again.");
     }
   };
+
+  const MetaMatrixLogo = () => {
+    return (
+      <div
+        style={{
+          fontSize: "24px",
+          fontWeight: "bold",
+          color: "#5c6ac4",
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+        }}
+      >
+        <div
+          style={{
+            width: "40px",
+            height: "40px",
+            backgroundColor: "#5c6ac4",
+            borderRadius: "8px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "white",
+            fontWeight: "bold",
+            fontSize: "24px",
+            marginRight: "8px",
+          }}
+        >
+          M
+        </div>
+        MetaMatrix
+      </div>
+    );
+  };
+
   return (
     <Page>
       {/* Hero Section */}
@@ -88,15 +138,6 @@ const SocialShareLanding = () => {
                 <Button outline>Watch Demo</Button>
               </Stack>
             </Stack>
-          </Layout.Section>
-
-          <Layout.Section oneHalf>
-            <div style={{ position: "relative" }}>
-              <Image
-                source="/api/placeholder/600/400"
-                alt="SocialShare in action"
-              />
-            </div>
           </Layout.Section>
         </Layout>
       </Card>
@@ -259,58 +300,166 @@ const SocialShareLanding = () => {
       {/* Pricing Section */}
       <Card sectioned>
         <TextContainer>
-          <Heading element="h2">Simple, Transparent Pricing</Heading>
-          <p>Start boosting your social sales today</p>
+          <DisplayText size="large">Simple, Transparent Pricing</DisplayText>
+          <Heading element="h1">Start boosting your social sales today</Heading>
         </TextContainer>
 
         <div style={{ maxWidth: "450px", margin: "0 auto" }}>
-          <Card
-            primaryFooterAction={{
-              content: "Subscribe",
-              onAction: createSubscriptionPlan, // Call the function on button click
-            }}
-          >
-            <Card.Section>
-              <div
-                style={{
-                  background: "var(--p-color-bg-primary)",
-                  color: "var(--p-color-text-on-primary)",
-                  padding: "16px",
-                  textAlign: "center",
-                  marginTop: "-20px",
-                  marginLeft: "-20px",
-                  marginRight: "-20px",
-                }}
-              >
-                <Heading element="h3">Premium Plan</Heading>
-              </div>
-            </Card.Section>
+          {isSubscribed ? (
+            <Card>
+              <Card.Section>
+                <div
+                  style={{
+                    background: "var(--p-color-bg-success)",
+                    color: "var(--p-color-text-on-primary)",
+                    padding: "16px",
+                    textAlign: "center",
+                    marginTop: "-20px",
+                    marginLeft: "-20px",
+                    marginRight: "-20px",
+                  }}
+                >
+                  <Heading element="h3">Current Subscription</Heading>
+                </div>
+              </Card.Section>
 
-            <Card.Section>
-              <div style={{ textAlign: "center", marginBottom: "24px" }}>
-                <DisplayText size="medium">$19</DisplayText>
-                <TextStyle variation="subdued">/month</TextStyle>
-              </div>
+              <Card.Section>
+                <div style={{ textAlign: "center", marginBottom: "24px" }}>
+                  <DisplayText size="medium">
+                    {planDetails?.name || "Active Plan"}
+                  </DisplayText>
+                  <TextStyle variation="subdued">
+                    ${planDetails?.price || "3.00"}/month
+                  </TextStyle>
+                </div>
 
-              <Stack vertical>
-                {[
-                  "Unlimited product sharing",
-                  "All social networks supported",
-                  "Custom buttons",
-                  "Priority support",
-                ].map((feature, index) => (
-                  <Stack key={index} alignment="center" spacing="tight">
+                <Stack vertical>
+                  <Stack alignment="center" spacing="tight">
                     <div style={{ color: "var(--p-color-text-success)" }}>
                       ✓
                     </div>
-                    <p>{feature}</p>
+                    <p>Your subscription is active</p>
                   </Stack>
-                ))}
-              </Stack>
-            </Card.Section>
-          </Card>
+                </Stack>
+              </Card.Section>
+            </Card>
+          ) : (
+            <Card
+              primaryFooterAction={{
+                content: "Subscribe",
+                onAction: createSubscriptionPlan,
+                disabled: isLoading,
+                loading: isLoading,
+              }}
+            >
+              <Card.Section>
+                <div
+                  style={{
+                    background: "var(--p-color-bg-primary)",
+                    color: "var(--p-color-text-on-primary)",
+                    padding: "16px",
+                    textAlign: "center",
+                    marginTop: "-20px",
+                    marginLeft: "-20px",
+                    marginRight: "-20px",
+                  }}
+                >
+                  <Heading element="h3">Premium Plan</Heading>
+                </div>
+              </Card.Section>
+
+              <Card.Section>
+                <div style={{ textAlign: "center", marginBottom: "24px" }}>
+                  <DisplayText size="medium">$19</DisplayText>
+                  <TextStyle variation="subdued">/month</TextStyle>
+                </div>
+
+                <Stack vertical>
+                  {[
+                    "Unlimited product sharing",
+                    "All social networks supported",
+                    "Custom buttons",
+                    "Priority support",
+                  ].map((feature, index) => (
+                    <Stack key={index} alignment="center" spacing="tight">
+                      <div style={{ color: "var(--p-color-text-success)" }}>
+                        ✓
+                      </div>
+                      <p>{feature}</p>
+                    </Stack>
+                  ))}
+                </Stack>
+              </Card.Section>
+            </Card>
+          )}
         </div>
       </Card>
+
+      {/* MetaMatrix Section */}
+      <div style={{ marginTop: "16px" }}>
+        <Card sectioned>
+          <Stack distribution="equalSpacing">
+            <Heading>Also Try This</Heading>
+          </Stack>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              textAlign: "center",
+              padding: "16px 0 0 0",
+            }}
+          >
+            <MetaMatrixLogo />
+
+            <div style={{ margin: "20px 0" }}>
+              <TextContainer>
+                <p
+                  style={{
+                    fontSize: "15px",
+                    color: "#637381",
+                    maxWidth: "600px",
+                    margin: "0 auto 24px auto",
+                  }}
+                >
+                  This app is powered by MetaMatrix, a leading provider of
+                  e-commerce enhancement tools. Our mission is to help you boost
+                  engagement and drive more sales through innovative social
+                  sharing solutions.
+                </p>
+                <p
+                  style={{
+                    fontSize: "15px",
+                    color: "#637381",
+                    maxWidth: "600px",
+                    margin: "0 auto",
+                  }}
+                >
+                  Unlock additional features like analytics, custom designs, and
+                  advanced sharing options with our premium plans.
+                </p>
+              </TextContainer>
+            </div>
+
+            <Button
+              primary
+              size="large"
+              icon={<Icon source={ExternalMinor} />}
+              style={{ minWidth: "250px" }}
+              onClick={() => window.open("https://metamatrix.io", "_blank")}
+            >
+              Explore MetaMatrix Solutions
+            </Button>
+
+            <div style={{ marginTop: "16px" }}>
+              <Link url="https://metamatrix.io/support" external>
+                Need help? Contact MetaMatrix Support
+              </Link>
+            </div>
+          </div>
+        </Card>
+      </div>
     </Page>
   );
 };

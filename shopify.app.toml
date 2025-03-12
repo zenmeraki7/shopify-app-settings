@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b14298e0daadbc2084bd859745a15091"
-application_url = "https://sie-kenya-restaurants-sequences.trycloudflare.com"
+application_url = "https://occasion-viewers-cosmetic-cleaner.trycloudflare.com"
 embedded = true
 name = "app-settings"
 handle = "app-settings-1"
@@ -20,9 +20,9 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://sie-kenya-restaurants-sequences.trycloudflare.com/auth/callback",
-  "https://sie-kenya-restaurants-sequences.trycloudflare.com/auth/shopify/callback",
-  "https://sie-kenya-restaurants-sequences.trycloudflare.com/api/auth/callback"
+  "https://occasion-viewers-cosmetic-cleaner.trycloudflare.com/auth/callback",
+  "https://occasion-viewers-cosmetic-cleaner.trycloudflare.com/auth/shopify/callback",
+  "https://occasion-viewers-cosmetic-cleaner.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
