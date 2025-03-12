@@ -4,13 +4,15 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "build": "cd frontend && npm install --include=dev && npm run build && cd ..",
+    "start": "node index.js",
     "debug": "node --inspect-brk index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js --ignore ./frontend",
     "serve": "cross-env NODE_ENV=production node index.js"
   },
   "type": "module",
   "engines": {
-    "node": ">=16.13.0"
+    "node": "18.x"
   },
   "dependencies": {
     "@shopify/shopify-app-express": "^5.0.8",
