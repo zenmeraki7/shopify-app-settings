@@ -26,7 +26,7 @@
       "label": "Show Messenger",
       "default": true
     },
-    {
+    { 
       "type": "checkbox",
       "id": "show_twitter",
       "label": "Show Twitter",
@@ -205,7 +205,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     console.log("socialShare")
-  const apiEndpoint = `${location.origin}/apps/proxy-1?shop=${Shopify.shop}`;
+  const apiEndpoint = `${location.origin}/apps/proxy?shop=${Shopify.shop}`;
   const loadingElement = document.getElementById('socialShareLoading');
   const contentElement = document.getElementById('socialShareContent');
   const errorElement = document.getElementById('socialShareError');

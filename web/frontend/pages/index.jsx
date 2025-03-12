@@ -496,13 +496,13 @@ const SocialShareLanding = () => {
               size="large"
               icon={<Icon source={ExternalMinor} />}
               style={{ minWidth: "250px" }}
-              onClick={() => window.open("https://metamatrix.io", "_blank")}
+              onClick={() => window.open("https://zenmeraki.com/project-metamatrix", "_blank")}
             >
               Explore MetaMatrix Solutions
             </Button>
 
             <div style={{ marginTop: "16px" }}>
-              <Link url="https://metamatrix.io/support" external>
+              <Link url="https://zenmeraki.com/project-metamatrix" external>
                 Need help? Contact MetaMatrix Support
               </Link>
             </div>
