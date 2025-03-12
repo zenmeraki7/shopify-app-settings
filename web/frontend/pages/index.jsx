@@ -75,7 +75,46 @@ const SocialShareLanding = () => {
       alert("Failed to create subscription. Please try again.");
     }
   };
-
+  const cancelSubscription = async () => {
+    try {
+      if (!window.confirm("Are you sure you want to cancel your subscription?")) {
+        return;
+      }
+  
+      if (!planDetails?.id) {
+        alert("Invalid subscription ID. Cannot cancel.");
+        return;
+      }
+  
+      setIsLoading(true);
+      
+      // Send just the numeric portion of the ID
+      const response = await fetch("/api/cancel-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          id: planDetails.id.toString().replace(/\D/g, '')  // Strip any non-numeric characters
+        }),
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to cancel subscription");
+      }
+   const data = await response.json();
+      setIsSubscribed(false);
+      setPlanDetails(null);
+      setIsLoading(false);
+      alert("Your subscription has been canceled successfully.");
+    } catch (error) {
+      console.error("Error canceling subscription:", error);
+      setIsLoading(false);
+      alert(`There was an error canceling your subscription: ${error.message}`);
+    }
+  };
+  
   const MetaMatrixLogo = () => {
     return (
       <div
@@ -298,102 +337,112 @@ const SocialShareLanding = () => {
       </Card>
 
       {/* Pricing Section */}
-      <Card sectioned>
-        <TextContainer>
-          <DisplayText size="large">Simple, Transparent Pricing</DisplayText>
-          <Heading element="h1">Start boosting your social sales today</Heading>
-        </TextContainer>
+     <Card sectioned>
+    <TextContainer>
+      <DisplayText size="large">Simple, Transparent Pricing</DisplayText>
+      <Heading element="h1">Start boosting your social sales today</Heading>
+    </TextContainer>
 
-        <div style={{ maxWidth: "450px", margin: "0 auto" }}>
-          {isSubscribed ? (
-            <Card>
-              <Card.Section>
-                <div
-                  style={{
-                    background: "var(--p-color-bg-success)",
-                    color: "var(--p-color-text-on-primary)",
-                    padding: "16px",
-                    textAlign: "center",
-                    marginTop: "-20px",
-                    marginLeft: "-20px",
-                    marginRight: "-20px",
-                  }}
-                >
-                  <Heading element="h3">Current Subscription</Heading>
-                </div>
-              </Card.Section>
-
-              <Card.Section>
-                <div style={{ textAlign: "center", marginBottom: "24px" }}>
-                  <DisplayText size="medium">
-                    {planDetails?.name || "Active Plan"}
-                  </DisplayText>
-                  <TextStyle variation="subdued">
-                    ${planDetails?.price || "3.00"}/month
-                  </TextStyle>
-                </div>
-
-                <Stack vertical>
-                  <Stack alignment="center" spacing="tight">
-                    <div style={{ color: "var(--p-color-text-success)" }}>
-                      ✓
-                    </div>
-                    <p>Your subscription is active</p>
-                  </Stack>
-                </Stack>
-              </Card.Section>
-            </Card>
-          ) : (
-            <Card
-              primaryFooterAction={{
-                content: "Subscribe",
-                onAction: createSubscriptionPlan,
-                disabled: isLoading,
-                loading: isLoading,
+    <div style={{ maxWidth: "450px", margin: "0 auto" }}>
+      {isSubscribed ? (
+        <Card>
+          <Card.Section>
+            <div
+              style={{
+                background: "var(--p-color-bg-success)",
+                color: "var(--p-color-text-on-primary)",
+                padding: "16px",
+                textAlign: "center",
+                marginTop: "-20px",
+                marginLeft: "-20px",
+                marginRight: "-20px",
               }}
             >
-              <Card.Section>
-                <div
-                  style={{
-                    background: "var(--p-color-bg-primary)",
-                    color: "var(--p-color-text-on-primary)",
-                    padding: "16px",
-                    textAlign: "center",
-                    marginTop: "-20px",
-                    marginLeft: "-20px",
-                    marginRight: "-20px",
-                  }}
-                >
-                  <Heading element="h3">Premium Plan</Heading>
-                </div>
-              </Card.Section>
+              <Heading element="h3">Current Subscription</Heading>
+            </div>
+          </Card.Section>
+                   <Card.Section>
+            <div style={{ textAlign: "center", marginBottom: "24px" }}>
+              <DisplayText size="medium">
+                {planDetails?.name || "Active Plan"}
+              </DisplayText>
+              <TextStyle variation="subdued">
+                ${planDetails?.price || "3.00"}/month
+              </TextStyle>
+            </div>
 
-              <Card.Section>
-                <div style={{ textAlign: "center", marginBottom: "24px" }}>
-                  <DisplayText size="medium">$19</DisplayText>
-                  <TextStyle variation="subdued">/month</TextStyle>
+            <Stack vertical>
+              <Stack alignment="center" spacing="tight">
+                <div style={{ color: "var(--p-color-text-success)" }}>
+                  ✓
                 </div>
+                <p>Your subscription is active</p>
+              </Stack>
+            </Stack>
+          </Card.Section>
+          <Card.Section>
+            <div style={{ textAlign: "center" }}>
+              <Button
+                destructive
+                onClick={cancelSubscription}
+                disabled={isLoading}
+                loading={isLoading}
+              >
+                Cancel Subscription
+              </Button>
+            </div>
+          </Card.Section>
+        </Card>
+      ) : (
+        <Card
+          primaryFooterAction={{
+            content: "Subscribe",
+            onAction: createSubscriptionPlan,
+            disabled: isLoading,
+            loading: isLoading,
+          }}
+        >
+         <Card.Section>
+            <div
+              style={{
+                background: "var(--p-color-bg-primary)",
+                color: "var(--p-color-text-on-primary)",
+                padding: "16px",
+                textAlign: "center",
+                marginTop: "-20px",
+                marginLeft: "-20px",
+                marginRight: "-20px",
+              }}
+            >
+              <Heading element="h3">Premium Plan</Heading>
+            </div>
+          </Card.Section>
+            <Card.Section>
+            <div style={{ textAlign: "center", marginBottom: "24px" }}>
+              <DisplayText size="medium">$19</DisplayText>
+              <TextStyle variation="subdued">/month</TextStyle>
+            </div>
 
-                <Stack vertical>
-                  {[
-                    "Unlimited product sharing",
-                    "All social networks supported",
-                    "Custom buttons",
-                    "Priority support",
-                  ].map((feature, index) => (
-                    <Stack key={index} alignment="center" spacing="tight">
-                      <div style={{ color: "var(--p-color-text-success)" }}>
-                        ✓
-                      </div>
-                      <p>{feature}</p>
-                    </Stack>
-                  ))}
+            <Stack vertical>
+              {[
+                "Unlimited product sharing",
+                "All social networks supported",
+                "Custom buttons",
+                "Priority support",
+              ].map((feature, index) => (
+                <Stack key={index} alignment="center" spacing="tight">
+                  <div style={{ color: "var(--p-color-text-success)" }}>
+                    ✓
+                  </div>
+                  <p>{feature}</p>
                 </Stack>
-              </Card.Section>
-            </Card>
-          )}
-        </div>
-      </Card>
+              ))}
+            </Stack>
+          </Card.Section>
+</Card>
+      )}
+    </div>
+</Card>
 
       {/* MetaMatrix Section */}
       <div style={{ marginTop: "16px" }}>
