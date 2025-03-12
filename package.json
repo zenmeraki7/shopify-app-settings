@@ -8,7 +8,8 @@
   },
   "scripts": {
     "shopify": "shopify",
-    "build": "shopify app build",
+    "build": "npm install -g @shopify/cli @shopify/app && cd web && npm install && npm run build",
+    "start": "cd web && npm start",
     "dev": "shopify app dev",
     "info": "shopify app info",
     "generate": "shopify app generate",
