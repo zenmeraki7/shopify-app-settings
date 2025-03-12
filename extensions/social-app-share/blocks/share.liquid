@@ -5,7 +5,8 @@
 
 {% schema %}
 {
-  "name": "Social Share",
+   
+  "name": "Tap2Share",
   "target": "section",
   "settings": [
     {
@@ -205,7 +206,8 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     console.log("socialShare")
-  const apiEndpoint = `${location.origin}/apps/proxy?shop=${Shopify.shop}`;
+  const apiEndpoint = `${location.origin}/apps/proxy-2?shop=${Shopify.shop}`;
+
   const loadingElement = document.getElementById('socialShareLoading');
   const contentElement = document.getElementById('socialShareContent');
   const errorElement = document.getElementById('socialShareError');
@@ -240,7 +242,7 @@ function copyAndOpen(event, link, url) {
   event.preventDefault(); // Prevent immediate navigation
 
   navigator.clipboard.writeText(link)
-    .then(() => {
+    .then(() => {  
       console.log("Link copied to clipboard:", link);
       setTimeout(() => {
         window.open(url, "_blank"); // Open the social media share link

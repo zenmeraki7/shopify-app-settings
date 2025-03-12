@@ -1,9 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-
 client_id = "5b7410abd25ebb9a88bb360204b9b8d8"
-application_url = "https://sole-undo-graduates-comment.trycloudflare.com/"
-
+application_url = "https://reliability-routes-into-terrible.trycloudflare.com"
 embedded = true
 name = "Tap2Share"
 handle = "customizer-39"
@@ -29,13 +27,13 @@ scopes = "read_products,write_products"
 
 [auth]
 redirect_urls = [
-  "https://sole-undo-graduates-comment.trycloudflare.com/auth/callback",
-  "https://sole-undo-graduates-comment.trycloudflare.com/auth/shopify/callback",
-  "https://sole-undo-graduates-comment.trycloudflare.com/api/auth/callback"
+  "https://reliability-routes-into-terrible.trycloudflare.com/auth/callback",
+  "https://reliability-routes-into-terrible.trycloudflare.com/auth/shopify/callback",
+  "https://reliability-routes-into-terrible.trycloudflare.com/api/auth/callback"
 ]
 
 [app_proxy]
-url = "https://sole-undo-graduates-comment.trycloudflare.com/search/query"
+url = "https://reliability-routes-into-terrible.trycloudflare.com/storefront/subscription"
 subpath = "proxy"
 prefix = "apps"
 
@@ -43,4 +41,4 @@ prefix = "apps"
 embedded = false
 
 [build]
-include_config_on_deploy = true
+automatically_update_urls_on_dev = true

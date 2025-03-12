@@ -72,7 +72,7 @@ app.post("/api/products", async (_req, res) => {
   } catch (e) {
     console.log(`Failed to process products/create: ${e.message}`);
     status = 500;
-    error = e.message;
+    error = e.message; 
   }
   res.status(status).send({ success: status === 200, error });
 });
