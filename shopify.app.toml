@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "5b7410abd25ebb9a88bb360204b9b8d8"
-application_url = "https://tap2share-260a3f2d402e.herokuapp.com/"
+application_url = "https://widely-and-expo-paintball.trycloudflare.com"
 embedded = true
 name = "Tap2Share"
 handle = "customizer-39"
@@ -27,13 +27,13 @@ scopes = "read_products,write_products"
 
 [auth]
 redirect_urls = [
-  "https://tap2share-260a3f2d402e.herokuapp.com/auth/callback",
-  "https://tap2share-260a3f2d402e.herokuapp.com/auth/shopify/callback",
-  "https://tap2share-260a3f2d402e.herokuapp.com/api/auth/callback"
+  "https://widely-and-expo-paintball.trycloudflare.com/auth/callback",
+  "https://widely-and-expo-paintball.trycloudflare.com/auth/shopify/callback",
+  "https://widely-and-expo-paintball.trycloudflare.com/api/auth/callback"
 ]
 
 [app_proxy]
-url = "https://tap2share-260a3f2d402e.herokuapp.com/storefront/subscription"
+url = "https://widely-and-expo-paintball.trycloudflare.com/storefront/subscription"
 subpath = "proxy"
 prefix = "apps"
 
@@ -42,3 +42,4 @@ embedded = false
 
 [build]
 automatically_update_urls_on_dev = true
+include_config_on_deploy = true
