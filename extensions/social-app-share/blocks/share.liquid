@@ -1,0 +1,531 @@
+{% comment %}
+  Social Share Buttons Section for Shopify
+  Allows customers to share products directly to DMs on various social platforms
+{% endcomment %}
+
+{% schema %} 
+{
+  "name": "Tap2Share",
+  "target": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Share this product"
+    },
+    {
+      "type": "text",
+      "id": "error_message",
+      "label": "Error Message",
+      "default": "Please subscribe to access the social sharing feature"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_messenger",
+      "label": "Show Messenger",
+      "default": true
+    },
+    { 
+      "type": "checkbox",
+      "id": "show_twitter",
+      "label": "Show Twitter",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_instagram",
+      "label": "Show Instagram",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_whatsapp",
+      "label": "Show WhatsApp",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_snapchat",
+      "label": "Show Snapchat",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "button_shape",
+      "label": "Button Shape",
+      "options": [
+        { "value": "circle", "label": "Circle" },
+        { "value": "rounded", "label": "Rounded Rectangle" },
+        { "value": "square", "label": "Square" }
+      ],
+      "default": "circle"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+  .social-share-container {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .social-share-heading {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+
+  .social-share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+    .social-btn {
+    width: 60px;
+    height: 60px;
+    max-width: 15vw;
+    max-height: 15vw;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 2px solid #ddd;
+    cursor: pointer;
+    flex-shrink: 0; /* Prevents buttons from stretching */
+  }
+
+.social-btn img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+  }
+
+  /* Adjust button size for smaller screens */
+  @media (max-width: 768px) {
+    .social-btn {
+      width: 50px;
+      height: 50px;
+      max-width: 12vw;
+      max-height: 12vw;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .social-btn {
+      width: 40px;
+      height: 40px;
+      max-width: 10vw;
+      max-height: 10vw;
+    }
+  }
+  
+  .social-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.15);
+  }
+  /* Dynamic Button Shape Styling */
+{% if block.settings.button_shape == "circle" %}
+  .social-btn {
+    border-radius: 50%; /* Circular buttons */
+     padding: 0;
+  }
+{% elsif block.settings.button_shape == "rounded" %}
+  .social-btn {
+    border-radius: 15px; /* Rounded rectangle buttons */
+    padding: 0;
+  }
+{% elsif block.settings.button_shape == "square" %}
+  .social-btn {
+    border-radius: 0; /* Square buttons */
+     padding: 0;
+  }
+{% endif %}
+  
+  .social-share-error {
+    text-align: center;
+    padding: 20px;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin: 10px 0;
+    display: none;
+  }
+  
+  .social-share-loading {
+    text-align: center;
+    padding: 20px;
+  }
+
+  /* Toast notification style */
+  .toast-notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 1000;
+    display: none;
+  }
+  
+  /* Modal for sharing platforms that need special handling */
+  .share-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 1001;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .share-modal-content {
+    background-color: #fff;
+    max-width: 400px;
+    width: 90%;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  .share-modal-content h3 {
+    margin-top: 0;
+  }
+  
+  .share-modal-content button {
+    padding: 10px 20px;
+    margin: 10px 5px;
+    background-color: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .share-modal-content button.secondary {
+    background-color: #6c757d;
+  }
+</style>
+
+<div id="socialShareSection" class="social-share-section">
+  <div id="socialShareLoading" class="social-share-loading">
+    <p>Loading sharing options...</p>
+  </div>   
+  
+  <div id="socialShareError" class="social-share-error">
+    {{ block.settings.error_message }}
+  </div>
+
+  <div id="socialShareContent" class="social-share-container" style="display: none;">
+    <p class="social-share-heading">{{ block.settings.heading }}</p>
+
+    {%- liquid
+      assign product_url = shop.url | append: product.url
+      assign product_title = product.title
+      assign product_title_encoded = product_title | url_encode
+      assign share_text = product_title | append: " - " | append: product_url
+      assign share_text_encoded = share_text | url_encode
+    -%}
+    
+    <div class="social-share-buttons">
+      
+      {% if block.settings.show_messenger %}
+        <div class="social-btn messenger" data-platform="messenger" data-share-text="{{ share_text }}" data-share-url="{{ product_url }}">
+          <img src="{{ 'messenger.png' | asset_url }}" alt="Messenger">
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_twitter %}
+        <div class="social-btn twitter" data-platform="twitter" data-share-text="{{ share_text }}" data-share-url="{{ product_url }}">
+          <img src="{{ 'x.png' | asset_url }}" alt="Twitter">
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_instagram %}
+        <div class="social-btn instagram" data-platform="instagram" data-share-text="{{ share_text }}" data-share-url="{{ product_url }}">
+          <img src="{{ 'instagram.jpeg' | asset_url }}" alt="Instagram">
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_whatsapp %}
+        <div class="social-btn whatsapp" data-platform="whatsapp" data-share-text="{{ share_text }}" data-share-url="{{ product_url }}">
+          <img src="{{ 'whatsapp.png' | asset_url }}" alt="WhatsApp">
+        </div>
+      {% endif %}
+
+      {% if block.settings.show_snapchat %}
+        <div class="social-btn snapchat" data-platform="snapchat" data-share-text="{{ share_text }}" data-share-url="{{ product_url }}">
+          <img src="{{ 'snapchat.png' | asset_url }}" alt="Snapchat">
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+  
+  <!-- Toast notification -->
+  <div id="toastNotification" class="toast-notification">
+    Link copied to clipboard!
+  </div>
+  
+  <!-- Sharing modal for platforms that need special handling -->
+  <div id="shareModal" class="share-modal">
+    <div class="share-modal-content">
+      <h3 id="modalTitle">Share Product</h3>
+      <p id="modalMessage">We've copied the product link to your clipboard.</p>
+      <div>
+        <button id="primaryActionBtn">Open App</button>
+        <button id="closeModalBtn" class="secondary">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("socialShare loaded");
+  const apiEndpoint = `${location.origin}/apps/proxy-2?shop=${Shopify.shop}`;
+
+  const loadingElement = document.getElementById('socialShareLoading');
+  const contentElement = document.getElementById('socialShareContent');
+  const errorElement = document.getElementById('socialShareError');
+  const toastElement = document.getElementById('toastNotification');
+  const shareModal = document.getElementById('shareModal');
+  const modalTitleElement = document.getElementById('modalTitle');
+  const modalMessageElement = document.getElementById('modalMessage');
+  const primaryActionBtn = document.getElementById('primaryActionBtn');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  
+  // Check if user is on mobile
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  
+  // Make API call to verify access
+  fetch(apiEndpoint, {
+    method: 'GET',
+    headers: {  
+      'Content-Type': 'application/json',
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('API verification failed');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // If API call is successful, show the social share content
+    loadingElement.style.display = 'none';
+    contentElement.style.display = 'block';
+    console.log('API verification successful:', data);
+  })
+  .catch(error => {
+    // If API call fails, show the error message
+    loadingElement.style.display = 'none';
+    errorElement.style.display = 'block';
+    console.error('API verification error:', error);
+  });
+
+  // Show toast notification function
+  function showToast(message, duration = 3000) {
+    toastElement.textContent = message;
+    toastElement.style.display = 'block';
+    
+    setTimeout(() => {
+      toastElement.style.display = 'none';
+    }, duration);
+  }
+  
+  // Copy text to clipboard function
+  function copyToClipboard(text) {
+    return navigator.clipboard.writeText(text)
+      .then(() => {
+        console.log('Text copied to clipboard:', text);
+        return true;
+      })
+      .catch(err => {
+        console.error('Failed to copy text:', err);
+        return false;
+      });
+  }
+  
+  // Show modal function
+  function showModal(platform, shareText) {
+    let appName = platform.charAt(0).toUpperCase() + platform.slice(1);
+    modalTitleElement.textContent = `Share via ${appName}`;
+    modalMessageElement.textContent = `We've copied the product link. Open ${appName} to paste in your direct message.`;
+    
+    primaryActionBtn.textContent = `Open ${appName}`;
+    primaryActionBtn.onclick = function() {
+      openApp(platform);
+      setTimeout(() => {
+        shareModal.style.display = 'none';
+      }, 500);
+    };
+    
+    shareModal.style.display = 'flex';
+  }
+  
+  // Open app function - handles different platforms
+  function openApp(platform) {
+    switch(platform) {
+      case 'messenger':
+        if (isMobile) {
+          window.location.href = 'fb-messenger://';
+        } else {
+          window.open('https://www.messenger.com/t/', '_blank');
+        }
+        break;
+        
+      case 'twitter':
+        if (isMobile) {
+          window.location.href = 'twitter://messages';
+        } else {
+          window.open('https://twitter.com/messages', '_blank');
+        }
+        break;
+        
+      case 'instagram':
+        if (isMobile) {
+          window.location.href = 'instagram://direct/inbox';
+        } else {
+          window.open('https://www.instagram.com/direct/inbox/', '_blank');
+        }
+        break;
+        
+      case 'snapchat':
+        if (isMobile) {
+          window.location.href = 'snapchat://';
+        } else {
+          window.open('https://web.snapchat.com', '_blank');
+        }
+        break;
+    }
+  }
+  
+  // Close modal button event
+  closeModalBtn.addEventListener('click', function() {
+    shareModal.style.display = 'none';
+  });
+
+  // Handle all share button clicks
+  document.querySelectorAll('.social-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      const platform = this.getAttribute('data-platform');
+      const shareText = this.getAttribute('data-share-text');
+      const shareUrl = this.getAttribute('data-share-url');
+      
+      switch(platform) {
+        case 'whatsapp':
+          // WhatsApp's wa.me link works well for direct messaging on both mobile and desktop
+          window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank');
+          break;
+          
+        case 'messenger':
+          copyToClipboard(shareUrl).then(success => {
+            if (success) {
+              if (isMobile) {
+                // Try to open Messenger app directly to inbox on mobile
+                window.location.href = 'fb-messenger://';
+                showToast("Link copied! Open Messenger to share.");
+                
+                // Fallback to web version after delay if app doesn't open
+                setTimeout(() => {
+                  window.open('https://www.messenger.com/t/', '_blank');
+                }, 1000);
+              } else {
+                // Desktop: go directly to messenger web conversations
+                window.open('https://www.messenger.com/t/', '_blank');
+                showToast("Link copied! Paste in your Messenger conversation.");
+              }
+            }
+          });
+          break;
+          
+        case 'twitter':
+          copyToClipboard(shareUrl).then(success => {
+            if (success) {
+              if (isMobile) {
+                // Open Twitter messages on mobile - NOT the compose tweet window
+                window.location.href = 'twitter://messages';
+                showToast("Link copied! Open Twitter to share in DM.");
+                
+                // Fallback to web DM after delay
+                setTimeout(() => {
+                  window.open('https://twitter.com/messages', '_blank');
+                }, 1000);
+              } else {
+                // Desktop: go directly to Twitter direct messages
+                window.open('https://twitter.com/messages', '_blank');
+                showToast("Link copied! Paste in your Twitter DM.");
+              }
+            }
+          });
+          break;
+          
+        case 'instagram':
+          copyToClipboard(shareUrl).then(success => {
+            if (success) {
+              // Show Instagram-specific modal
+              showModal('instagram', shareUrl);
+              
+              // Alternative approach: directly try to open Instagram DM
+              if (isMobile) {
+                // Try to open Instagram direct inbox on mobile
+                window.location.href = 'instagram://direct/inbox';
+                
+                // Fallback to web version
+                setTimeout(() => {
+                  window.open('https://www.instagram.com/direct/inbox/', '_blank');
+                }, 1000);
+              } else {
+                // Desktop: go directly to Instagram DM web
+                window.open('https://www.instagram.com/direct/inbox/', '_blank');
+              }
+            }
+          });
+          break;
+          
+        case 'snapchat':
+          copyToClipboard(shareUrl).then(success => {
+            if (success) {
+              if (isMobile) {
+                // For Snapchat, there's no reliable direct deep link to chat
+                // The best approach is to just open the app and let user navigate to chat
+                showToast("Link copied! Open Snapchat and paste in chat");
+                
+                // Try to open Snapchat app (general deep link)
+                window.location.href = 'snapchat://';
+                
+                // If that doesn't work after a delay, try another approach
+                setTimeout(() => {
+                  // Try alternative deep link
+                  window.location.href = 'snapchat://add';
+                  
+                  // If still no success, open web as last resort
+                  setTimeout(() => {
+                    window.open('https://web.snapchat.com', '_blank');
+                  }, 1000);
+                }, 1000);
+              } else {
+                // For desktop, just open web interface
+                showToast("Link copied! Sign in to Snapchat web to share");
+                window.open('https://web.snapchat.com', '_blank');
+              }
+            }
+          });
+          break;
+      }
+    });
+  });
+});
+</script>

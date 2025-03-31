@@ -1,15 +1,10 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b14298e0daadbc2084bd859745a15091"
-application_url = "https://practices-queries-attachments-concerns.trycloudflare.com"
+application_url = "https://butts-doc-vote-transaction.trycloudflare.com"
 embedded = true
 name = "app-settings"
 handle = "app-settings-1"
-
-[build]
-include_config_on_deploy = true
-automatically_update_urls_on_dev = true
-dev_store_url = "demo-zen-store.myshopify.com"
 
 [webhooks]
 api_version = "2025-01"
@@ -20,10 +15,18 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://practices-queries-attachments-concerns.trycloudflare.com/auth/callback",
-  "https://practices-queries-attachments-concerns.trycloudflare.com/auth/shopify/callback",
-  "https://practices-queries-attachments-concerns.trycloudflare.com/api/auth/callback"
+  "https://butts-doc-vote-transaction.trycloudflare.com/auth/callback",
+  "https://butts-doc-vote-transaction.trycloudflare.com/auth/shopify/callback",
+  "https://butts-doc-vote-transaction.trycloudflare.com/api/auth/callback"
 ]
+
+[app_proxy]
+url = "https://butts-doc-vote-transaction.trycloudflare.com/storefront/subscription"
+subpath = "proxy"
+prefix = "apps"
 
 [pos]
 embedded = false
+
+[build]
+automatically_update_urls_on_dev = true

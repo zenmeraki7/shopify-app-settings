@@ -7,6 +7,8 @@ import serveStatic from "serve-static";
 import shopify from "./shopify.js";
 import productCreator from "./product-creator.js";
 import PrivacyWebhookHandlers from "./privacy.js";
+import { authenticateUser } from "./middlewares/authenticateStorefrontUser.js";
+import { checkActivePlan, createSubscriptionPlan, deleteSubscriptionPlans } from "./controllers/subscriptionController.js";
 
 const PORT = parseInt(
   process.env.BACKEND_PORT || process.env.PORT || "3000",
@@ -36,8 +38,14 @@ app.post(
 // also add a proxy rule for them in web/frontend/vite.config.js
 
 app.use("/api/*", shopify.validateAuthenticatedSession());
+app.use("/storefront/*", authenticateUser);
 
 app.use(express.json());
+
+app.get("/storefront/subscription",checkActivePlan)
+app.get("/api/verify-subscription",checkActivePlan)
+app.post("/api/subscribe",createSubscriptionPlan)
+app.post("/api/cancel-subscription",deleteSubscriptionPlans)
 
 app.get("/api/products/count", async (_req, res) => {
   const client = new shopify.api.clients.Graphql({
@@ -64,7 +72,7 @@ app.post("/api/products", async (_req, res) => {
   } catch (e) {
     console.log(`Failed to process products/create: ${e.message}`);
     status = 500;
-    error = e.message;
+    error = e.message; 
   }
   res.status(status).send({ success: status === 200, error });
 });
@@ -73,14 +81,14 @@ app.use(shopify.cspHeaders());
 app.use(serveStatic(STATIC_PATH, { index: false }));
 
 app.use("/*", shopify.ensureInstalledOnShop(), async (_req, res, _next) => {
-  return res
+  res
     .status(200)
     .set("Content-Type", "text/html")
     .send(
-      readFileSync(join(STATIC_PATH, "index.html"))
-        .toString()
+      readFileSync(join(STATIC_PATH, "index.html"), "utf8")
         .replace("%VITE_SHOPIFY_API_KEY%", process.env.SHOPIFY_API_KEY || "")
     );
 });
+
 
 app.listen(PORT);
