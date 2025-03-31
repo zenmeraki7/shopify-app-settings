@@ -174,7 +174,7 @@ const SocialShareLanding = () => {
               </TextContainer>
 
               <Stack distribution="leading" spacing="tight">
-                <Button outline href='https://youtu.be/916_bQB-xgI'>Watch Demo</Button>
+                <Button outline onClick={() => window.open("https://youtu.be/916_bQB-xgI", "_blank")}>Watch Demo</Button>
               </Stack>
             </Stack>
           </Layout.Section>
@@ -496,7 +496,7 @@ const SocialShareLanding = () => {
               size="large"
               icon={<Icon source={ExternalMinor} />}
               style={{ minWidth: "250px" }}
-              onClick={() => window.open("https://metamatrix.io", "_blank")}
+              onClick={() => window.open("https://www.zenmeraki.com/privacy", "_blank")}
             >
               Explore MetaMatrix Solutions
             </Button>
