@@ -1,8 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b14298e0daadbc2084bd859745a15091"
-application_url = "https://journey-ratio-fiber-officer.trycloudflare.com"
-application_url = "https://volumes-figured-yang-speech.trycloudflare.com"
+application_url = "https://practices-queries-attachments-concerns.trycloudflare.com"
 embedded = true
 name = "app-settings"
 handle = "app-settings-1"
@@ -21,14 +20,10 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://journey-ratio-fiber-officer.trycloudflare.com/auth/callback",
-  "https://journey-ratio-fiber-officer.trycloudflare.com/auth/shopify/callback",
-  "https://journey-ratio-fiber-officer.trycloudflare.com/api/auth/callback"
-  "https://volumes-figured-yang-speech.trycloudflare.com/auth/callback",
-  "https://volumes-figured-yang-speech.trycloudflare.com/auth/shopify/callback",
-  "https://volumes-figured-yang-speech.trycloudflare.com/api/auth/callback"
+  "https://practices-queries-attachments-concerns.trycloudflare.com/auth/callback",
+  "https://practices-queries-attachments-concerns.trycloudflare.com/auth/shopify/callback",
+  "https://practices-queries-attachments-concerns.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]
 embedded = false
-
