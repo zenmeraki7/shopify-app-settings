@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "b14298e0daadbc2084bd859745a15091"
-application_url = "https://butts-doc-vote-transaction.trycloudflare.com"
+application_url = "https://detect-mc-planet-gotta.trycloudflare.com"
 embedded = true
 name = "app-settings"
 handle = "app-settings-1"
@@ -15,13 +15,13 @@ scopes = "write_products"
 
 [auth]
 redirect_urls = [
-  "https://butts-doc-vote-transaction.trycloudflare.com/auth/callback",
-  "https://butts-doc-vote-transaction.trycloudflare.com/auth/shopify/callback",
-  "https://butts-doc-vote-transaction.trycloudflare.com/api/auth/callback"
+  "https://detect-mc-planet-gotta.trycloudflare.com/auth/callback",
+  "https://detect-mc-planet-gotta.trycloudflare.com/auth/shopify/callback",
+  "https://detect-mc-planet-gotta.trycloudflare.com/api/auth/callback"
 ]
 
 [app_proxy]
-url = "https://butts-doc-vote-transaction.trycloudflare.com/storefront/subscription"
+url = "https://detect-mc-planet-gotta.trycloudflare.com/storefront/subscription"
 subpath = "proxy"
 prefix = "apps"
 
