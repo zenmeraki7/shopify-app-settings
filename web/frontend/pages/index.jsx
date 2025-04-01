@@ -13,8 +13,8 @@ import {
   Link,
   Image,
 } from "@shopify/polaris";
-import { OrdersMajor, ProductsMajor } from "@shopify/polaris-icons";
-import { ExternalMinor } from "@shopify/polaris-icons";
+import { Share2, Palette } from 'lucide-react';
+
 
 const SocialShareLanding = () => {
   const [isSubscribed, setIsSubscribed] = useState(null);
@@ -157,7 +157,6 @@ const SocialShareLanding = () => {
           <Layout.Section oneHalf>
             <Stack vertical spacing="loose">
               <Stack alignment="center" spacing="tight">
-                <Icon source={OrdersMajor} color="primary" />
                 <TextStyle variation="strong">SocialShare</TextStyle>
               </Stack>
 
@@ -188,57 +187,57 @@ const SocialShareLanding = () => {
         </TextContainer>
 
         <Layout>
-          <Layout.Section oneQuarter>
-            <Card>
-              <Card.Section>
-                <Stack alignment="center" distribution="center" spacing="tight">
-                  <div
-                    style={{
-                      background: "var(--p-color-bg-primary-subdued)",
-                      padding: "12px",
-                      borderRadius: "50%",
-                      marginBottom: "16px",
-                    }}
-                  >
-                    <Icon source={OrdersMajor} color="primary" />
-                  </div>
-                </Stack>
-                <TextContainer spacing="tight">
-                  <Heading>One-click sharing</Heading>
-                  <p>
-                    Enable customers to share to multiple platforms with just
-                    one click
-                  </p>
-                </TextContainer>
-              </Card.Section>
-            </Card>
-          </Layout.Section>
+  <Layout.Section oneQuarter>
+    <Card>
+      <Card.Section>
+        <Stack alignment="center" distribution="center" spacing="tight">
+          <div
+            style={{
+              background: "var(--p-color-bg-primary-subdued)",
+              padding: "12px",
+              borderRadius: "50%",
+              marginBottom: "16px",
+            }}
+          >
+            <Share2 size={24} />
+          </div>
+        </Stack>
+        <TextContainer spacing="tight">
+          <Heading>One-click sharing</Heading>
+          <p>
+            Enable customers to share to multiple platforms with just
+            one click
+          </p>
+        </TextContainer>
+      </Card.Section>
+    </Card>
+  </Layout.Section>
 
-          <Layout.Section oneQuarter>
-            <Card>
-              <Card.Section>
-                <Stack alignment="center" distribution="center" spacing="tight">
-                  <div
-                    style={{
-                      background: "var(--p-color-bg-primary-subdued)",
-                      padding: "12px",
-                      borderRadius: "50%",
-                      marginBottom: "16px",
-                    }}
-                  >
-                    <Icon source={ProductsMajor} color="primary" />
-                  </div>
-                </Stack>
-                <TextContainer spacing="tight">
-                  <Heading>Customizable Buttons</Heading>
-                  <p>
-                    Adjust button shapes, styles, and sizes to match your brand
-                  </p>
-                </TextContainer>
-              </Card.Section>
-            </Card>
-          </Layout.Section>
-        </Layout>
+  <Layout.Section oneQuarter>
+    <Card>
+      <Card.Section>
+        <Stack alignment="center" distribution="center" spacing="tight">
+          <div
+            style={{
+              background: "var(--p-color-bg-primary-subdued)",
+              padding: "12px",
+              borderRadius: "50%",
+              marginBottom: "16px",
+            }}
+          >
+            <Palette size={24} />
+          </div>
+        </Stack>
+        <TextContainer spacing="tight">
+          <Heading>Customizable Buttons</Heading>
+          <p>
+            Adjust button shapes, styles, and sizes to match your brand
+          </p>
+        </TextContainer>
+      </Card.Section>
+    </Card>
+  </Layout.Section>
+</Layout>
       </Card>
 
       {/* How It Works Section */}
@@ -494,7 +493,6 @@ const SocialShareLanding = () => {
             <Button
               primary
               size="large"
-              icon={<Icon source={ExternalMinor} />}
               style={{ minWidth: "250px" }}
               onClick={() => window.open("https://www.zenmeraki.com/privacy", "_blank")}
             >
