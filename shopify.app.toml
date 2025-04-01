@@ -1,27 +1,39 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "b14298e0daadbc2084bd859745a15091"
-application_url = "https://detect-mc-planet-gotta.trycloudflare.com"
+client_id = "5b7410abd25ebb9a88bb360204b9b8d8"
+application_url = "https://tap2share-260a3f2d402e.herokuapp.com/"
 embedded = true
-name = "app-settings"
-handle = "app-settings-1"
+name = "Tap2Share"
+handle = "customizer-39"
 
 [webhooks]
-api_version = "2025-01"
+api_version = "2024-07"
+
+  [[webhooks.subscriptions]]
+  uri = "https://metamatrix-bulk-editor.fly.dev/gdpr/webhooks/customer_data_request"
+  compliance_topics = [ "customers/data_request" ]
+
+  [[webhooks.subscriptions]]
+  uri = "https://metamatrix-bulk-editor.fly.dev/gdpr/webhooks/shop_data_delete"
+  compliance_topics = [ "shop/redact" ]
+
+  [[webhooks.subscriptions]]
+  uri = "https://metamatrix-bulk-editor.fly.dev/webhooks/customer_data_delete"
+  compliance_topics = [ "customers/redact" ]
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+scopes = "read_products,write_products"
 
 [auth]
 redirect_urls = [
-  "https://detect-mc-planet-gotta.trycloudflare.com/auth/callback",
-  "https://detect-mc-planet-gotta.trycloudflare.com/auth/shopify/callback",
-  "https://detect-mc-planet-gotta.trycloudflare.com/api/auth/callback"
+  "https://tap2share-260a3f2d402e.herokuapp.com/auth/callback",
+  "https://tap2share-260a3f2d402e.herokuapp.com/auth/shopify/callback",
+  "https://tap2share-260a3f2d402e.herokuapp.com/api/auth/callback"
 ]
 
 [app_proxy]
-url = "https://detect-mc-planet-gotta.trycloudflare.com/storefront/subscription"
+url = "https://tap2share-260a3f2d402e.herokuapp.com/storefront/subscription"
 subpath = "proxy"
 prefix = "apps"
 
@@ -29,4 +41,4 @@ prefix = "apps"
 embedded = false
 
 [build]
-automatically_update_urls_on_dev = true
+include_config_on_deploy = true
