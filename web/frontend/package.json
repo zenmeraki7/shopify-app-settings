@@ -12,9 +12,6 @@
   "engines": {
     "node": "18.x"
   },
-  "stylelint": {
-    "extends": "@shopify/stylelint-polaris"
-  },
   "dependencies": {
     "@formatjs/intl-locale": "^3.3.2",
     "@formatjs/intl-localematcher": "^0.4.0",

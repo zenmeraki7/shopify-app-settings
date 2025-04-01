@@ -25,5 +25,8 @@
     "extensions/*",
     "web",
     "web/frontend"
-  ]
+  ],
+  "devDependencies": {
+    "rollup": "^4.28.0"
+  }
 }
