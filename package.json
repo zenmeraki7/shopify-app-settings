@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "web/index.js",
   "license": "UNLICENSED",
- "engines": {
-  "node": ">=20.10.0"
-},
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "shopify": "shopify",
     "build": "npm install -g @shopify/cli @shopify/app && cd web && npm install && npm run build",
