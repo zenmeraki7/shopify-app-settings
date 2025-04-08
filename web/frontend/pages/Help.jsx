@@ -149,7 +149,7 @@ function Help() {
             <TextContainer>
               <h2>Need Help?</h2>
               <p>If you're having trouble setting up the app, please contact our support team.</p>
-              <Link url="mailto:official@zenmeraki.com">Contact Support</Link>
+              <Link url="mailto:zenmerakihelp@gmail.com">Contact Support</Link>
             </TextContainer>
           </Card>
         </Layout.Section>

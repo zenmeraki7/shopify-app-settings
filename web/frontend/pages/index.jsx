@@ -63,7 +63,7 @@ const SocialShareLanding = () => {
 
       const data = await response.json();
 
-      // Dynamically create an <a> tag and trigger a click event
+      // Dynamically create an <a> tag and trigger a click event  
       const link = document.createElement("a");
       link.href = data.charge.confirmationUrl;
       link.target = "_top"; // Ensures it opens in the top frame (important for Shopify apps)
@@ -339,7 +339,9 @@ const SocialShareLanding = () => {
      <Card sectioned>
     <TextContainer>
       <DisplayText size="large">Simple, Transparent Pricing</DisplayText>
-      <Heading element="h1">Start boosting your social sales today</Heading>
+      <div style={{  marginBottom: "16px" }}>
+      <Heading element="h1" >Start boosting your social sales today</Heading>
+      </div>
     </TextContainer>
 
     <div style={{ maxWidth: "450px", margin: "0 auto" }}>
@@ -366,7 +368,7 @@ const SocialShareLanding = () => {
                 {planDetails?.name || "Active Plan"}
               </DisplayText>
               <TextStyle variation="subdued">
-                ${planDetails?.price || "3.00"}/month
+                $3.00/month
               </TextStyle>
             </div>
 
@@ -413,12 +415,12 @@ const SocialShareLanding = () => {
                 marginRight: "-20px",
               }}
             >
-              <Heading element="h3">Premium Plan</Heading>
+              <Heading element="h3">Basic (Monthly)</Heading>
             </div>
           </Card.Section>
             <Card.Section>
             <div style={{ textAlign: "center", marginBottom: "24px" }}>
-              <DisplayText size="medium">$19</DisplayText>
+              <DisplayText size="medium">$3.0</DisplayText>
               <TextStyle variation="subdued">/month</TextStyle>
             </div>
 
@@ -494,16 +496,16 @@ const SocialShareLanding = () => {
               primary
               size="large"
               style={{ minWidth: "250px" }}
-              onClick={() => window.open("https://www.zenmeraki.com/privacy", "_blank")}
+              onClick={() => window.open("https://apps.shopify.com/metamatrix", "_blank")}
             >
               Explore MetaMatrix Solutions
             </Button>
-
+{/* 
             <div style={{ marginTop: "16px" }}>
-              <Link url="https://metamatrix.io/support" external>
+              <Link url="zenmerakihelp@gmail.com" external>
                 Need help? Contact MetaMatrix Support
               </Link>
-            </div>
+            </div> */}
           </div>
         </Card>
       </div>

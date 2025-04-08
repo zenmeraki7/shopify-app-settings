@@ -10,15 +10,15 @@ handle = "customizer-39"
 api_version = "2024-07"
 
   [[webhooks.subscriptions]]
-  uri = "https://tap2share-260a3f2d402e.herokuapp.com/gdpr/webhooks/customer_data_request"
+  uri = "/gdpr/webhooks/customer_data_request"
   compliance_topics = [ "customers/data_request" ]
 
   [[webhooks.subscriptions]]
-  uri = "https://tap2share-260a3f2d402e.herokuapp.com/gdpr/webhooks/shop_data_delete"
+  uri = "/gdpr/webhooks/shop_data_delete"
   compliance_topics = [ "shop/redact" ]
 
   [[webhooks.subscriptions]]
-  uri = "https://tap2share-260a3f2d402e.herokuapp.com/webhooks/customer_data_delete"
+  uri = "/webhooks/customer_data_delete"
   compliance_topics = [ "customers/redact" ]
 
 [access_scopes]
@@ -39,6 +39,3 @@ prefix = "apps"
 
 [pos]
 embedded = false
-
-[build]
-include_config_on_deploy = true
