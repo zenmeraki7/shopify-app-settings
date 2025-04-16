@@ -75,45 +75,45 @@ const SocialShareLanding = () => {
       alert("Failed to create subscription. Please try again.");
     }
   };
-  // const cancelSubscription = async () => {
-  //   try {
-  //     if (!window.confirm("Are you sure you want to cancel your subscription?")) {
-  //       return;
-  //     }
+  const cancelSubscription = async () => {
+    try {
+      if (!window.confirm("Are you sure you want to cancel your subscription?")) {
+        return;
+      }
   
-  //     if (!planDetails?.id) {
-  //       alert("Invalid subscription ID. Cannot cancel.");
-  //       return;
-  //     }
+      if (!planDetails?.id) {
+        alert("Invalid subscription ID. Cannot cancel.");
+        return;
+      }
   
-  //     setIsLoading(true);
+      setIsLoading(true);
       
-  //     // Send just the numeric portion of the ID
-  //     const response = await fetch("/api/cancel-subscription", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ 
-  //         id: planDetails.id.toString().replace(/\D/g, '')  // Strip any non-numeric characters
-  //       }),
-  //     });
+      // Send just the numeric portion of the ID
+      const response = await fetch("/api/cancel-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ 
+          id: planDetails.id.toString().replace(/\D/g, '')  // Strip any non-numeric characters
+        }),
+      });
   
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       throw new Error(errorData.error || "Failed to cancel subscription");
-  //     }
-  //  const data = await response.json();
-  //     setIsSubscribed(false);
-  //     setPlanDetails(null);
-  //     setIsLoading(false);
-  //     alert("Your subscription has been canceled successfully.");
-  //   } catch (error) {
-  //     console.error("Error canceling subscription:", error);
-  //     setIsLoading(false);
-  //     alert(`There was an error canceling your subscription: ${error.message}`);
-  //   }
-  // };
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to cancel subscription");
+      }
+   const data = await response.json();
+      setIsSubscribed(false);
+      setPlanDetails(null);
+      setIsLoading(false);
+      alert("Your subscription has been canceled successfully.");
+    } catch (error) {
+      console.error("Error canceling subscription:", error);
+      setIsLoading(false);
+      alert(`There was an error canceling your subscription: ${error.message}`);
+    }
+  };
   
   const MetaMatrixLogo = () => {
     return (
@@ -381,7 +381,7 @@ const SocialShareLanding = () => {
               </Stack>
             </Stack>
           </Card.Section>
-          {/* <Card.Section>
+          <Card.Section>
             <div style={{ textAlign: "center" }}>
               <Button
                 destructive
@@ -392,7 +392,7 @@ const SocialShareLanding = () => {
                 Cancel Subscription
               </Button>
             </div>
-          </Card.Section> */}
+          </Card.Section>
         </Card>
       ) : (
         <Card
