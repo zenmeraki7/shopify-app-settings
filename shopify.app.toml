@@ -1,28 +1,41 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "20f31d269398d5f23df95d0450e772e9"
-name = "test-app"
-handle = "test-app-11537"
-application_url = "https://began-clicking-gratis-tile.trycloudflare.com"
+client_id = "5b7410abd25ebb9a88bb360204b9b8d8"
+name = "Tap2Share"
+handle = "customizer-39"
+application_url = "https://tap2share-260a3f2d402e.herokuapp.com/"
 embedded = true
 
 [webhooks]
-api_version = "2025-01"
+api_version = "2024-07"
+
+  [[webhooks.subscriptions]]
+  uri = "/gdpr/webhooks/customer_data_request"
+  compliance_topics = [ "customers/data_request" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/gdpr/webhooks/shop_data_delete"
+  compliance_topics = [ "shop/redact" ]
+
+  [[webhooks.subscriptions]]
+  uri = "/webhooks/customer_data_delete"
+  compliance_topics = [ "customers/redact" ]
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products"
+scopes = "read_products,write_products"
 
 [auth]
 redirect_urls = [
-  "https://began-clicking-gratis-tile.trycloudflare.com/auth/callback",
-  "https://began-clicking-gratis-tile.trycloudflare.com/auth/shopify/callback",
-  "https://began-clicking-gratis-tile.trycloudflare.com/api/auth/callback"
+  "https://tap2share-260a3f2d402e.herokuapp.com/auth/callback",
+  "https://tap2share-260a3f2d402e.herokuapp.com/auth/shopify/callback",
+  "https://tap2share-260a3f2d402e.herokuapp.com/api/auth/callback"
 ]
+
+[app_proxy]
+url = "https://tap2share-260a3f2d402e.herokuapp.com/storefront/subscription"
+subpath = "proxy"
+prefix = "apps"
 
 [pos]
 embedded = false
-
-[build]
-include_config_on_deploy = true
-automatically_update_urls_on_dev = true

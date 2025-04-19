@@ -23,7 +23,6 @@ const createShopifyCharge = async (session, planDetails) => {
         name: $name
         returnUrl: $returnUrl
         trialDays: $trialDays
-        test: true
         lineItems: [
           {
             plan: {
