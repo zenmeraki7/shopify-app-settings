@@ -1,4 +1,4 @@
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NavMenu } from "@shopify/app-bridge-react";
 import Routes from "./Routes";
@@ -17,10 +17,16 @@ export default function App() {
     <PolarisProvider>
       <BrowserRouter>
         <QueryProvider>
-          <NavMenu>
-            <a href="/" rel="home" />
-            <a href="/help">{t("Help")}</a>
-          </NavMenu>
+     <NavMenu>
+
+  <Link to="/socialsharelanding">Social Share</Link>
+  <Link to="/sharebuttonssettings">Share buttton settings</Link>
+  <Link to="/help">Help</Link>
+</NavMenu>
+
+
+
+
           <Routes pages={pages} />
         </QueryProvider>
       </BrowserRouter>

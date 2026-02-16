@@ -1,44 +1,19 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "5b7410abd25ebb9a88bb360204b9b8d8"
-name = "Tap2Share"
-handle = "customizer-39"
-application_url = "https://tap2share-260a3f2d402e.herokuapp.com/"
+client_id = "6f9d8710bcea15a9a7814c24bb5404be"
+name = "new"
+application_url = "https://example.com"
 embedded = true
 
 [webhooks]
-api_version = "2024-07"
-
-  [[webhooks.subscriptions]]
-  uri = "/gdpr/webhooks/customer_data_request"
-  compliance_topics = [ "customers/data_request" ]
-
-  [[webhooks.subscriptions]]
-  uri = "/gdpr/webhooks/shop_data_delete"
-  compliance_topics = [ "shop/redact" ]
-
-  [[webhooks.subscriptions]]
-  uri = "/webhooks/customer_data_delete"
-  compliance_topics = [ "customers/redact" ]
+api_version = "2026-01"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "read_products,write_products"
+scopes = "write_products"
 
 [auth]
-redirect_urls = [
-  "https://tap2share-260a3f2d402e.herokuapp.com/auth/callback",
-  "https://tap2share-260a3f2d402e.herokuapp.com/auth/shopify/callback",
-  "https://tap2share-260a3f2d402e.herokuapp.com/api/auth/callback"
-]
-
-[app_proxy]
-url = "https://tap2share-260a3f2d402e.herokuapp.com/storefront/subscription"
-subpath = "proxy"
-prefix = "apps"
-
-[pos]
-embedded = false
+redirect_urls = [ "https://example.com/api/auth" ]
 
 [build]
-include_config_on_deploy = true
+automatically_update_urls_on_dev = true

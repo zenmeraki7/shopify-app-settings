@@ -18,6 +18,7 @@
   "dependencies": {
     "@shopify/app": "^3.x",
     "@shopify/cli": "^3.x",
+    "@shopify/polaris": "^13.9.5",
     "lucide-react": "^0.487.0"
   },
   "author": "rojal",
