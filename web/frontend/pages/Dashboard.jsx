@@ -1,12 +1,14 @@
 // FILE: web/frontend/pages/Dashboard.jsx
-// High-end Shopify-native Dashboard (Polaris) for embedded app
+// High-end Shopify-native Dashboard (Polaris) for embedded app (Vite + React Router)
+// Works with:
+// - @shopify/polaris ^13.x
+// - @shopify/polaris-icons ^9.x (NO *Minor/*Major exports)
 // Assumptions:
-// - You already have Polaris <AppProvider> + App Bridge provider at app root.
-// - Optional: you have endpoints:
+// - You already wrap the app with <AppProvider> (Polaris) + App Bridge provider at root.
+// - Optional endpoints:
 //   GET /api/settings/share-buttons  -> { settings }
 //   GET /api/verify-subscription     -> { active, activePlan? }
 //   GET /api/analytics/share-buttons/summary?days=30 (optional) -> { clicksTotal, topPlatform, mobilePct, series: [{date, clicks}] }
-// If analytics endpoint doesn't exist, this page still renders (shows "Connect analytics" empty state).
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
@@ -31,7 +33,16 @@ import {
 } from "@shopify/polaris";
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { Toast } from "@shopify/app-bridge/actions";
-import { ExternalMinor, SettingsMinor, AnalyticsMinor, CircleTickMajor, AlertMinor } from "@shopify/polaris-icons";
+
+// ✅ Polaris Icons v9 uses *Icon exports (not Minor/Major)
+import {
+  ExternalIcon,
+  SettingsIcon,
+  ChartLineIcon,
+  CheckCircleIcon,
+  AlertCircleIcon,
+} from "@shopify/polaris-icons";
+
 
 const DAYS = 30;
 
@@ -55,7 +66,10 @@ export default function Dashboard() {
   const [loadError, setLoadError] = useState(null);
 
   const [settings, setSettings] = useState(null);
-  const [subscription, setSubscription] = useState({ active: null, planName: null });
+  const [subscription, setSubscription] = useState({
+    active: null,
+    planName: null,
+  });
   const [analytics, setAnalytics] = useState(null); // optional
 
   useEffect(() => {
@@ -98,7 +112,8 @@ export default function Dashboard() {
           if (!cancelled) {
             setSubscription({
               active: !!data?.active,
-              planName: data?.activePlan?.name || (data?.active ? "Active plan" : null),
+              planName:
+                data?.activePlan?.name || (data?.active ? "Active plan" : null),
             });
           }
         } else {
@@ -113,7 +128,8 @@ export default function Dashboard() {
           if (!cancelled) setAnalytics(null);
         }
       } catch (e) {
-        if (!cancelled) setLoadError(e?.message || "Failed to load dashboard data");
+        if (!cancelled)
+          setLoadError(e?.message || "Failed to load dashboard data");
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -132,20 +148,20 @@ export default function Dashboard() {
       {
         id: "builder",
         label: "Edit Share Buttons",
-        icon: SettingsMinor,
+        icon: SettingsIcon,
         primary: true,
         onAction: () => (window.location.href = "/app/share-buttons"), // adjust route
       },
       {
         id: "theme",
         label: "Open Theme Editor",
-        icon: ExternalMinor,
+        icon: ExternalIcon,
         onAction: () => openThemeEditorTopFrame(),
       },
       {
         id: "analytics",
         label: "View Analytics",
-        icon: AnalyticsMinor,
+        icon: ChartLineIcon,
         onAction: () => (window.location.href = "/app/analytics"), // adjust route
       },
     ],
@@ -156,7 +172,9 @@ export default function Dashboard() {
     // Best-practice: real checks should come from backend health endpoint.
     // Here we infer what we can from settings; everything else is "unknown".
     const enabled = settings?.enabled === true;
-    const hasPlatforms = settings?.platforms ? Object.values(settings.platforms).some(Boolean) : false;
+    const hasPlatforms = settings?.platforms
+      ? Object.values(settings.platforms).some(Boolean)
+      : false;
 
     return [
       {
@@ -165,7 +183,9 @@ export default function Dashboard() {
         state: enabled ? "ok" : "warn",
         actionLabel: enabled ? "View settings" : "Enable",
         onAction: () => (window.location.href = "/app/share-buttons"),
-        help: enabled ? "Buttons are enabled in app settings." : "Enable buttons to show on storefront.",
+        help: enabled
+          ? "Buttons are enabled in app settings."
+          : "Enable buttons to show on storefront.",
       },
       {
         key: "platforms",
@@ -173,7 +193,7 @@ export default function Dashboard() {
         state: hasPlatforms ? "ok" : "warn",
         actionLabel: "Edit platforms",
         onAction: () => (window.location.href = "/app/share-buttons"),
-        help: hasPlatforms ? "Platforms selected." : "Enable one or more share destinations.",
+        help: hasPlatforms ? "Platforms selected." : "Enable share destinations.",
       },
       {
         key: "themeEmbed",
@@ -204,9 +224,24 @@ export default function Dashboard() {
   const recentActivity = useMemo(() => {
     // Replace with backend logs later. For now, infer from settings timestamps if you return them.
     const items = [];
-    if (settings) items.push({ id: "settings", title: "Settings loaded", detail: "Dashboard is synced with saved configuration." });
-    if (subscription.active === true) items.push({ id: "plan", title: "Plan active", detail: subscription.planName || "Active plan detected." });
-    if (subscription.active === false) items.push({ id: "plan2", title: "Plan inactive", detail: "Upgrade to unlock premium options (if applicable)." });
+    if (settings)
+      items.push({
+        id: "settings",
+        title: "Settings loaded",
+        detail: "Dashboard is synced with saved configuration.",
+      });
+    if (subscription.active === true)
+      items.push({
+        id: "plan",
+        title: "Plan active",
+        detail: subscription.planName || "Active plan detected.",
+      });
+    if (subscription.active === false)
+      items.push({
+        id: "plan2",
+        title: "Plan inactive",
+        detail: "Upgrade to unlock premium options (if applicable).",
+      });
     return items.slice(0, 6);
   }, [settings, subscription]);
 
@@ -280,8 +315,21 @@ export default function Dashboard() {
                       <Badge tone={settings?.mobileOnly ? "warning" : "info"}>
                         Mobile-only: {settings?.mobileOnly ? "On" : "Off"}
                       </Badge>
-                      <Badge tone={subscription.active === true ? "success" : subscription.active === false ? "critical" : "info"}>
-                        Plan: {subscription.active === true ? (subscription.planName || "Active") : subscription.active === false ? "Inactive" : "Unknown"}
+                      <Badge
+                        tone={
+                          subscription.active === true
+                            ? "success"
+                            : subscription.active === false
+                            ? "critical"
+                            : "info"
+                        }
+                      >
+                        Plan:{" "}
+                        {subscription.active === true
+                          ? subscription.planName || "Active"
+                          : subscription.active === false
+                          ? "Inactive"
+                          : "Unknown"}
                       </Badge>
                     </InlineStack>
 
@@ -321,7 +369,7 @@ export default function Dashboard() {
                     Performance snapshot (last {DAYS} days)
                   </Text>
                   <Button
-                    icon={AnalyticsMinor}
+                    icon={ChartLineIcon}
                     onClick={() => (window.location.href = "/app/analytics")}
                     plain
                   >
@@ -336,17 +384,22 @@ export default function Dashboard() {
                   </>
                 ) : analytics ? (
                   <InlineStack gap="600" wrap>
-                    <Metric
-                      label="Total share clicks"
-                      value={formatInt(analytics.clicksTotal)}
-                    />
+                    <Metric label="Total share clicks" value={formatInt(analytics.clicksTotal)} />
                     <Metric
                       label="Top platform"
-                      value={analytics.topPlatform ? humanizePlatform(analytics.topPlatform) : "—"}
+                      value={
+                        analytics.topPlatform
+                          ? humanizePlatform(analytics.topPlatform)
+                          : "—"
+                      }
                     />
                     <Metric
                       label="Mobile share"
-                      value={Number.isFinite(analytics.mobilePct) ? `${Math.round(analytics.mobilePct)}%` : "—"}
+                      value={
+                        Number.isFinite(analytics.mobilePct)
+                          ? `${Math.round(analytics.mobilePct)}%`
+                          : "—"
+                      }
                     />
                     <Metric
                       label="Enabled platforms"
@@ -359,7 +412,11 @@ export default function Dashboard() {
                     title="Analytics not connected yet"
                     action={{
                       content: "Enable analytics",
-                      onAction: () => showToast("Hook up /api/analytics/share-buttons/summary to show metrics", false),
+                      onAction: () =>
+                        showToast(
+                          "Hook up /api/analytics/share-buttons/summary to show metrics",
+                          false
+                        ),
                     }}
                   >
                     <p>
@@ -377,7 +434,10 @@ export default function Dashboard() {
                   <Text as="h2" variant="headingMd">
                     Recent activity
                   </Text>
-                  <Button plain onClick={() => showToast("Wire this to your logs endpoint later")}>
+                  <Button
+                    plain
+                    onClick={() => showToast("Wire this to your logs endpoint later")}
+                  >
                     Manage
                   </Button>
                 </InlineStack>
@@ -388,20 +448,18 @@ export default function Dashboard() {
                   <ResourceList
                     resourceName={{ singular: "event", plural: "events" }}
                     items={recentActivity}
-                    renderItem={(item) => {
-                      return (
-                        <ResourceItem id={item.id} accessibilityLabel={item.title}>
-                          <BlockStack gap="100">
-                            <Text as="h3" variant="bodyMd" fontWeight="semibold">
-                              {item.title}
-                            </Text>
-                            <Text as="p" tone="subdued">
-                              {item.detail}
-                            </Text>
-                          </BlockStack>
-                        </ResourceItem>
-                      );
-                    }}
+                    renderItem={(item) => (
+                      <ResourceItem id={item.id} accessibilityLabel={item.title}>
+                        <BlockStack gap="100">
+                          <Text as="h3" variant="bodyMd" fontWeight="semibold">
+                            {item.title}
+                          </Text>
+                          <Text as="p" tone="subdued">
+                            {item.detail}
+                          </Text>
+                        </BlockStack>
+                      </ResourceItem>
+                    )}
                   />
                 ) : (
                   <Text as="p" tone="subdued">
@@ -454,7 +512,10 @@ export default function Dashboard() {
                 <Box paddingBlockStart="100">
                   <Text as="p" tone="subdued">
                     Need help?{" "}
-                    <Link removeUnderline onClick={() => showToast("Add your support link here")}>
+                    <Link
+                      removeUnderline
+                      onClick={() => showToast("Add your support link here")}
+                    >
                       Contact support
                     </Link>
                   </Text>
@@ -510,13 +571,25 @@ function Metric({ label, value }) {
 
 function ChecklistRow({ label, help, state, actionLabel, onAction }) {
   const tone =
-    state === "ok" ? "success" : state === "warn" ? "warning" : state === "critical" ? "critical" : "info";
+    state === "ok"
+      ? "success"
+      : state === "warn"
+      ? "warning"
+      : state === "critical"
+      ? "critical"
+      : "info";
 
-  const iconSource =
-    state === "ok" ? CircleTickMajor : state === "warn" ? AlertMinor : state === "critical" ? AlertMinor : AlertMinor;
+  // ✅ Polaris Icons v9: use *Icon exports
+  const iconSource = state === "ok" ? CheckCircleIcon : AlertCircleIcon;
 
   const iconTone =
-    state === "ok" ? "success" : state === "warn" ? "warning" : state === "critical" ? "critical" : "subdued";
+    state === "ok"
+      ? "success"
+      : state === "warn"
+      ? "warning"
+      : state === "critical"
+      ? "critical"
+      : "subdued";
 
   return (
     <Box padding="200" borderColor="border" borderWidth="025" borderRadius="200">
@@ -531,7 +604,13 @@ function ChecklistRow({ label, help, state, actionLabel, onAction }) {
               {help}
             </Text>
             <Badge tone={tone}>
-              {state === "ok" ? "Done" : state === "warn" ? "Needs attention" : state === "critical" ? "Blocked" : "Check"}
+              {state === "ok"
+                ? "Done"
+                : state === "warn"
+                ? "Needs attention"
+                : state === "critical"
+                ? "Blocked"
+                : "Check"}
             </Badge>
           </BlockStack>
         </InlineStack>
@@ -578,13 +657,18 @@ function deriveStatus(settings) {
         tone: "warning",
         title: "Settings not found",
         body: "We couldn’t load share button settings. Check app permissions or try again.",
-        action: { content: "Open settings", onAction: () => (window.location.href = "/app/share-buttons") },
+        action: {
+          content: "Open settings",
+          onAction: () => (window.location.href = "/app/share-buttons"),
+        },
       },
     };
   }
 
   const enabled = settings.enabled === true;
-  const anyPlatform = settings.platforms ? Object.values(settings.platforms).some(Boolean) : false;
+  const anyPlatform = settings.platforms
+    ? Object.values(settings.platforms).some(Boolean)
+    : false;
 
   if (!enabled) {
     return {
@@ -593,7 +677,10 @@ function deriveStatus(settings) {
         tone: "critical",
         title: "Share buttons are disabled",
         body: "Enable share buttons to show them on your storefront product pages.",
-        action: { content: "Enable in settings", onAction: () => (window.location.href = "/app/share-buttons") },
+        action: {
+          content: "Enable in settings",
+          onAction: () => (window.location.href = "/app/share-buttons"),
+        },
       },
     };
   }
@@ -605,7 +692,10 @@ function deriveStatus(settings) {
         tone: "warning",
         title: "No platforms enabled",
         body: "Enable at least one platform (WhatsApp, Instagram, Email, etc.) to display buttons.",
-        action: { content: "Edit platforms", onAction: () => (window.location.href = "/app/share-buttons") },
+        action: {
+          content: "Edit platforms",
+          onAction: () => (window.location.href = "/app/share-buttons"),
+        },
       },
     };
   }

@@ -9,6 +9,7 @@ import { useShareButtonsSettings } from "../hooks/useShareButtonsSettings";
 import { ShareButtonsForm } from "../components/share-buttons/ShareButtonsForm";
 import { ShareButtonsPreview } from "../components/share-buttons/ShareButtonsPreview";
 
+
 export default function ShareButtonsSettingsPage() {
   const app = useAppBridge();
 

@@ -5,11 +5,12 @@ import {
   Card,
   Button,
   Text,
-  InlineStack,
+  InlineGrid,
   BlockStack,
-  Link,
+  Divider,
+  Box
 } from "@shopify/polaris";
-import { Share2, Palette } from "lucide-react";
+import { Share2, Palette, CheckCircle } from "lucide-react";
 
 const SocialShareLanding = () => {
   const [isSubscribed, setIsSubscribed] = useState(null);
@@ -38,13 +39,7 @@ const SocialShareLanding = () => {
         body: JSON.stringify({ planType: "basic", billingCycle: "monthly" }),
       });
       const data = await res.json();
-
-      const link = document.createElement("a");
-      link.href = data.charge.confirmationUrl;
-      link.target = "_top";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      window.open(data.charge.confirmationUrl, "_top");
     } catch {
       alert("Subscription failed.");
     }
@@ -62,40 +57,43 @@ const SocialShareLanding = () => {
       setIsSubscribed(false);
       setPlanDetails(null);
       setIsLoading(false);
-      alert("Cancelled");
     } catch {
       setIsLoading(false);
     }
   };
 
   const FeatureCard = ({ icon, title, desc }) => (
-    <Card>
+    <Card padding="600">
       <BlockStack gap="300" align="center">
         {icon}
         <Text variant="headingMd">{title}</Text>
-        <Text tone="subdued">{desc}</Text>
+        <Text tone="subdued" alignment="center">
+          {desc}
+        </Text>
       </BlockStack>
     </Card>
   );
 
   return (
-    <Page title="SocialShare">
+    <Page>
       <Layout>
 
         {/* HERO */}
         <Layout.Section>
-          <Card>
-            <BlockStack gap="400">
-              <Text variant="headingXl">
-                Boost Your Sales Through Social Sharing
+          <Card padding="800">
+            <BlockStack gap="400" align="center">
+              <Text variant="headingXl" alignment="center">
+                Turn Customers Into Your Best Marketers
               </Text>
-              <Text tone="subdued">
-                SocialShare lets customers share products instantly across
-                platforms and increase conversions.
+              <Text tone="subdued" alignment="center">
+                Let shoppers share your products instantly on social media and
+                drive more traffic with zero effort.
               </Text>
               <Button
-                variant="secondary"
-                onClick={() => window.open("https://youtu.be/916_bQB-xgI")}
+                primary
+                onClick={() =>
+                  window.open("https://youtu.be/916_bQB-xgI")
+                }
               >
                 Watch Demo
               </Button>
@@ -105,95 +103,122 @@ const SocialShareLanding = () => {
 
         {/* FEATURES */}
         <Layout.Section>
-          <InlineStack gap="400">
-            <FeatureCard
-              icon={<Share2 size={24} />}
-              title="One-Click Sharing"
-              desc="Share to all social platforms instantly."
-            />
-            <FeatureCard
-              icon={<Palette size={24} />}
-              title="Custom Buttons"
-              desc="Style buttons to match your brand."
-            />
-          </InlineStack>
+          <BlockStack gap="400">
+            <Text variant="headingLg" alignment="center">
+              Powerful Features
+            </Text>
+
+            <InlineGrid columns={2} gap="400">
+              <FeatureCard
+                icon={<Share2 size={28} />}
+                title="One-Click Sharing"
+                desc="Customers share products instantly across social platforms."
+              />
+              <FeatureCard
+                icon={<Palette size={28} />}
+                title="Custom Styling"
+                desc="Buttons that match your brand perfectly."
+              />
+            </InlineGrid>
+          </BlockStack>
         </Layout.Section>
 
         {/* HOW IT WORKS */}
         <Layout.Section>
-          <Card>
-            <BlockStack gap="400">
-              <Text variant="headingLg">How It Works</Text>
+          <Card padding="800">
+            <BlockStack gap="600">
+              <Text variant="headingLg" alignment="center">
+                How It Works
+              </Text>
 
-              <InlineStack gap="400">
-                <BlockStack>
-                  <Text variant="headingMd">1. Install</Text>
-                  <Text tone="subdued">Add app to store</Text>
+              <InlineGrid columns={3} gap="600">
+                <BlockStack gap="200" align="center">
+                  <CheckCircle size={32} />
+                  <Text variant="headingMd">Install</Text>
+                  <Text tone="subdued" alignment="center">
+                    Add app to your store
+                  </Text>
                 </BlockStack>
-                <BlockStack>
-                  <Text variant="headingMd">2. Customize</Text>
-                  <Text tone="subdued">Choose styles</Text>
+
+                <BlockStack gap="200" align="center">
+                  <CheckCircle size={32} />
+                  <Text variant="headingMd">Customize</Text>
+                  <Text tone="subdued" alignment="center">
+                    Pick your button style
+                  </Text>
                 </BlockStack>
-                <BlockStack>
-                  <Text variant="headingMd">3. Grow</Text>
-                  <Text tone="subdued">Increase traffic</Text>
+
+                <BlockStack gap="200" align="center">
+                  <CheckCircle size={32} />
+                  <Text variant="headingMd">Grow</Text>
+                  <Text tone="subdued" alignment="center">
+                    Get more traffic & sales
+                  </Text>
                 </BlockStack>
-              </InlineStack>
+              </InlineGrid>
             </BlockStack>
           </Card>
         </Layout.Section>
 
         {/* PRICING */}
-        <Layout.Section>
-          <Card>
-            <BlockStack gap="400" align="center">
-              <Text variant="headingLg">Simple Pricing</Text>
+   {/* PRICING */}
+<Layout.Section>
+  <BlockStack gap="400">
+    <Text variant="headingLg">Simple Pricing</Text>
 
-              {isSubscribed ? (
-                <>
-                  <Text variant="headingMd">
-                    {planDetails?.name || "Active Plan"}
-                  </Text>
-                  <Text tone="subdued">$3/month</Text>
-                  <Button
-                    destructive
-                    loading={isLoading}
-                    onClick={cancelSubscription}
-                  >
-                    Cancel
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Text variant="headingMd">$3 / month</Text>
-                  <Button
-                    primary
-                    loading={isLoading}
-                    onClick={createSubscriptionPlan}
-                  >
-                    Subscribe
-                  </Button>
-                </>
-              )}
-            </BlockStack>
-          </Card>
-        </Layout.Section>
+    <Card padding="0">
+      <Box paddingBlock="400" paddingInlineStart="200" paddingInlineEnd="400">
+        <BlockStack gap="050" inlineAlign="start">
+          <Text variant="heading2xl">$3</Text>
+          <Text tone="subdued">per month</Text>
+        </BlockStack>
+      </Box>
+
+      <Divider />
+
+      <Box padding="400">
+        {isSubscribed ? (
+          <Button
+            destructive
+            fullWidth
+            loading={isLoading}
+            onClick={cancelSubscription}
+          >
+            Cancel Subscription
+          </Button>
+        ) : (
+          <Button
+            primary
+            fullWidth
+            loading={isLoading}
+            onClick={createSubscriptionPlan}
+          >
+            Subscribe Now
+          </Button>
+        )}
+      </Box>
+    </Card>
+  </BlockStack>
+</Layout.Section>
+
+
 
         {/* FOOTER */}
         <Layout.Section>
-          <Card>
-            <BlockStack gap="300" align="center">
+          <Card padding="500">
+            <BlockStack gap="200" align="center">
               <Text variant="headingMd">Powered by MetaMatrix</Text>
               <Text tone="subdued">
                 Advanced ecommerce growth tools.
               </Text>
               <Button
                 variant="secondary"
+                fullWidth
                 onClick={() =>
                   window.open("https://apps.shopify.com/metamatrix")
                 }
               >
-                Explore
+                Explore More Apps
               </Button>
             </BlockStack>
           </Card>
