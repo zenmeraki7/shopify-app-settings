@@ -1,15 +1,3 @@
-// FILE: web/frontend/pages/Dashboard.jsx
-// High-end Shopify-native Dashboard (Polaris) for embedded app (Vite + React Router)
-// Works with:
-// - @shopify/polaris ^13.x
-// - @shopify/polaris-icons ^9.x (NO *Minor/*Major exports)
-// Assumptions:
-// - You already wrap the app with <AppProvider> (Polaris) + App Bridge provider at root.
-// - Optional endpoints:
-//   GET /api/settings/share-buttons  -> { settings }
-//   GET /api/verify-subscription     -> { active, activePlan? }
-//   GET /api/analytics/share-buttons/summary?days=30 (optional) -> { clicksTotal, topPlatform, mobilePct, series: [{date, clicks}] }
-
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Page,
@@ -31,10 +19,11 @@ import {
   ProgressBar,
   Link,
 } from "@shopify/polaris";
+
 import { useAppBridge } from "@shopify/app-bridge-react";
 import { Toast } from "@shopify/app-bridge/actions";
 
-// ✅ Polaris Icons v9 uses *Icon exports (not Minor/Major)
+// ✅ Polaris Icons v9 uses *Icon exports
 import {
   ExternalIcon,
   SettingsIcon,
@@ -43,13 +32,16 @@ import {
   AlertCircleIcon,
 } from "@shopify/polaris-icons";
 
+// ✅ Authenticated fetch for embedded apps
+import { useAuthFetch } from "../hooks/useAuthFetch";
 
 const DAYS = 30;
 
 export default function Dashboard() {
   const app = useAppBridge();
-  const [toastRef, setToastRef] = useState(null);
+  const authFetch = useAuthFetch();
 
+  const [toastRef, setToastRef] = useState(null);
   const showToast = useCallback(
     (message, isError = false) => {
       try {
@@ -81,25 +73,19 @@ export default function Dashboard() {
 
       try {
         const [settingsRes, subRes, analyticsRes] = await Promise.allSettled([
-          fetch("/api/settings/share-buttons", {
+          authFetch("/api/settings/share-buttons", { method: "GET" }),
+          authFetch("/api/verify-subscription", { method: "GET" }),
+          authFetch(`/api/analytics/share-buttons/summary?days=${DAYS}`, {
             method: "GET",
-            credentials: "include",
-            headers: { Accept: "application/json" },
-          }),
-          fetch("/api/verify-subscription", {
-            method: "GET",
-            credentials: "include",
-            headers: { Accept: "application/json" },
-          }),
-          fetch(`/api/analytics/share-buttons/summary?days=${DAYS}`, {
-            method: "GET",
-            credentials: "include",
-            headers: { Accept: "application/json" },
           }),
         ]);
 
         // Settings
-        if (settingsRes.status === "fulfilled" && settingsRes.value.ok) {
+        if (
+          settingsRes.status === "fulfilled" &&
+          settingsRes.value &&
+          settingsRes.value.ok
+        ) {
           const data = await settingsRes.value.json();
           if (!cancelled) setSettings(data?.settings || null);
         } else {
@@ -107,7 +93,7 @@ export default function Dashboard() {
         }
 
         // Subscription
-        if (subRes.status === "fulfilled" && subRes.value.ok) {
+        if (subRes.status === "fulfilled" && subRes.value && subRes.value.ok) {
           const data = await subRes.value.json();
           if (!cancelled) {
             setSubscription({
@@ -121,15 +107,20 @@ export default function Dashboard() {
         }
 
         // Analytics (optional)
-        if (analyticsRes.status === "fulfilled" && analyticsRes.value.ok) {
+        if (
+          analyticsRes.status === "fulfilled" &&
+          analyticsRes.value &&
+          analyticsRes.value.ok
+        ) {
           const data = await analyticsRes.value.json();
           if (!cancelled) setAnalytics(data || null);
         } else {
           if (!cancelled) setAnalytics(null);
         }
       } catch (e) {
-        if (!cancelled)
+        if (!cancelled) {
           setLoadError(e?.message || "Failed to load dashboard data");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -139,7 +130,7 @@ export default function Dashboard() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [authFetch]);
 
   const status = useMemo(() => deriveStatus(settings), [settings]);
 
@@ -150,7 +141,7 @@ export default function Dashboard() {
         label: "Edit Share Buttons",
         icon: SettingsIcon,
         primary: true,
-        onAction: () => (window.location.href = "/app/share-buttons"), // adjust route
+        onAction: () => (window.location.href = "/app/share-buttons"),
       },
       {
         id: "theme",
@@ -162,15 +153,13 @@ export default function Dashboard() {
         id: "analytics",
         label: "View Analytics",
         icon: ChartLineIcon,
-        onAction: () => (window.location.href = "/app/analytics"), // adjust route
+        onAction: () => (window.location.href = "/app/analytics"),
       },
     ],
     []
   );
 
   const installationChecklist = useMemo(() => {
-    // Best-practice: real checks should come from backend health endpoint.
-    // Here we infer what we can from settings; everything else is "unknown".
     const enabled = settings?.enabled === true;
     const hasPlatforms = settings?.platforms
       ? Object.values(settings.platforms).some(Boolean)
@@ -222,13 +211,12 @@ export default function Dashboard() {
   }, [installationChecklist]);
 
   const recentActivity = useMemo(() => {
-    // Replace with backend logs later. For now, infer from settings timestamps if you return them.
     const items = [];
     if (settings)
       items.push({
         id: "settings",
-        title: "Settings loaded",
-        detail: "Dashboard is synced with saved configuration.",
+        title: "Settings synced",
+        detail: "Dashboard is using your saved configuration.",
       });
     if (subscription.active === true)
       items.push({
@@ -254,7 +242,10 @@ export default function Dashboard() {
         onAction: () => (window.location.href = "/app/share-buttons"),
       }}
       secondaryActions={[
-        { content: "Open Theme Editor", onAction: () => openThemeEditorTopFrame() },
+        {
+          content: "Open Theme Editor",
+          onAction: () => openThemeEditorTopFrame(),
+        },
       ]}
     >
       {loadError ? (
@@ -272,7 +263,7 @@ export default function Dashboard() {
       ) : null}
 
       <Layout>
-        {/* Left: Status + Performance + Activity */}
+        {/* Left column */}
         <Layout.Section>
           <BlockStack gap="400">
             <Card>
@@ -387,11 +378,7 @@ export default function Dashboard() {
                     <Metric label="Total share clicks" value={formatInt(analytics.clicksTotal)} />
                     <Metric
                       label="Top platform"
-                      value={
-                        analytics.topPlatform
-                          ? humanizePlatform(analytics.topPlatform)
-                          : "—"
-                      }
+                      value={analytics.topPlatform ? humanizePlatform(analytics.topPlatform) : "—"}
                     />
                     <Metric
                       label="Mobile share"
@@ -401,10 +388,7 @@ export default function Dashboard() {
                           : "—"
                       }
                     />
-                    <Metric
-                      label="Enabled platforms"
-                      value={formatInt(countEnabledPlatforms(settings))}
-                    />
+                    <Metric label="Enabled platforms" value={formatInt(countEnabledPlatforms(settings))} />
                   </InlineStack>
                 ) : (
                   <Banner
@@ -413,10 +397,7 @@ export default function Dashboard() {
                     action={{
                       content: "Enable analytics",
                       onAction: () =>
-                        showToast(
-                          "Hook up /api/analytics/share-buttons/summary to show metrics",
-                          false
-                        ),
+                        showToast("Connect /api/analytics/share-buttons/summary to show metrics"),
                     }}
                   >
                     <p>
@@ -434,10 +415,7 @@ export default function Dashboard() {
                   <Text as="h2" variant="headingMd">
                     Recent activity
                   </Text>
-                  <Button
-                    plain
-                    onClick={() => showToast("Wire this to your logs endpoint later")}
-                  >
+                  <Button plain onClick={() => showToast("Wire this to logs later")}>
                     Manage
                   </Button>
                 </InlineStack>
@@ -471,7 +449,7 @@ export default function Dashboard() {
           </BlockStack>
         </Layout.Section>
 
-        {/* Right: Installation checklist */}
+        {/* Right column */}
         <Layout.Section secondary>
           <BlockStack gap="400">
             <Card>
@@ -512,10 +490,7 @@ export default function Dashboard() {
                 <Box paddingBlockStart="100">
                   <Text as="p" tone="subdued">
                     Need help?{" "}
-                    <Link
-                      removeUnderline
-                      onClick={() => showToast("Add your support link here")}
-                    >
+                    <Link removeUnderline onClick={() => showToast("Add your support link")}>
                       Contact support
                     </Link>
                   </Text>
@@ -570,18 +545,7 @@ function Metric({ label, value }) {
 }
 
 function ChecklistRow({ label, help, state, actionLabel, onAction }) {
-  const tone =
-    state === "ok"
-      ? "success"
-      : state === "warn"
-      ? "warning"
-      : state === "critical"
-      ? "critical"
-      : "info";
-
-  // ✅ Polaris Icons v9: use *Icon exports
   const iconSource = state === "ok" ? CheckCircleIcon : AlertCircleIcon;
-
   const iconTone =
     state === "ok"
       ? "success"
@@ -590,6 +554,15 @@ function ChecklistRow({ label, help, state, actionLabel, onAction }) {
       : state === "critical"
       ? "critical"
       : "subdued";
+
+  const badgeTone =
+    state === "ok"
+      ? "success"
+      : state === "warn"
+      ? "warning"
+      : state === "critical"
+      ? "critical"
+      : "info";
 
   return (
     <Box padding="200" borderColor="border" borderWidth="025" borderRadius="200">
@@ -603,7 +576,7 @@ function ChecklistRow({ label, help, state, actionLabel, onAction }) {
             <Text as="p" tone="subdued">
               {help}
             </Text>
-            <Badge tone={tone}>
+            <Badge tone={badgeTone}>
               {state === "ok"
                 ? "Done"
                 : state === "warn"
@@ -744,9 +717,6 @@ function formatInt(n) {
 }
 
 function openThemeEditorTopFrame() {
-  // Embedded apps should open admin URLs in top frame.
-  // Replace with your preferred deep link if you have shop domain available.
-  // Example deep link patterns vary; you can also return a URL from backend for correctness.
   const url = "https://admin.shopify.com/themes/current/editor";
   const a = document.createElement("a");
   a.href = url;

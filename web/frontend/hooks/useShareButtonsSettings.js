@@ -1,6 +1,6 @@
-// FILE: web/frontend/hooks/useShareButtonsSettings.js
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { stableStringify } from "../utils/stableStringify";
+import { useAuthFetch } from "./useAuthFetch";
 
 const DEFAULTS = {
   enabled: true,
@@ -28,6 +28,8 @@ const DEFAULTS = {
 };
 
 export function useShareButtonsSettings() {
+  const authFetch = useAuthFetch();
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
@@ -50,10 +52,8 @@ export function useShareButtonsSettings() {
     abortRef.current = ac;
 
     try {
-      const res = await fetch("/api/settings/share-buttons", {
+      const res = await authFetch("/api/settings/share-buttons", {
         method: "GET",
-        credentials: "include",
-        headers: { "Accept": "application/json" },
         signal: ac.signal,
       });
 
@@ -70,14 +70,13 @@ export function useShareButtonsSettings() {
     } catch (e) {
       if (e?.name !== "AbortError") {
         setError(e?.message || "Failed to load settings");
-        // Fall back to defaults for usability
         setSaved(DEFAULTS);
         setDraft(DEFAULTS);
       }
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [authFetch]);
 
   useEffect(() => {
     load();
@@ -93,10 +92,9 @@ export function useShareButtonsSettings() {
     setError(null);
 
     try {
-      const res = await fetch("/api/settings/share-buttons", {
+      const res = await authFetch("/api/settings/share-buttons", {
         method: "PUT",
-        credentials: "include",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(draft),
       });
 
@@ -118,7 +116,7 @@ export function useShareButtonsSettings() {
     } finally {
       setSaving(false);
     }
-  }, [draft]);
+  }, [authFetch, draft]);
 
   return {
     loading,
